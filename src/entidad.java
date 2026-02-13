@@ -41,7 +41,5 @@ public class entidad{
         this.Tipo = Tipo;
         this.vida = vida;
         this.dano = dano;
-
-
     }
 }

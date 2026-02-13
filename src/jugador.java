@@ -12,6 +12,10 @@ public class jugador extends entidad {
         setTipo("jugador");
         setDano(1);
         setVida(10);
+
+        System.out.println("mapa actual");
+
+        System.out.println("en que direccion quieres moverte: ");
     }
     @Override
     public String toString() {

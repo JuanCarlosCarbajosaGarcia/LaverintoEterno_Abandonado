@@ -1,2 +1,2 @@
-public class Movimiento {
+public class Movimiento{
 }
