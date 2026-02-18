@@ -19,9 +19,9 @@ public class Enemigo extends entidad{
         int[] dx ={-1,0,1,0};
         int[] dy={0,1,0,-1};
         int dir = rand.nextInt(4);
-        int newX = x + dy[dir];
-        int newY = y + dx[dir];
-        if (newX>=0 && newX<mapa[0].length && newY>=0 && newY<mapa.length && mapa[newY][newX]!='#'){
+        int newX = x + dx[dir];
+        int newY = y + dy[dir];
+        if (newX >=0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newY][newX]!='#'){
             x=newX;
             y=newY;
         }
@@ -35,6 +35,15 @@ public class Enemigo extends entidad{
     public int getY() {
         return y;
     }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     @Override
     public String toString() {
         return super.toString();

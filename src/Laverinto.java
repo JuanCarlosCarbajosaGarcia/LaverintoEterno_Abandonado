@@ -8,11 +8,19 @@ public class Laverinto{
     private static final int Tamanoy = 25;
     private static final int Max_intentos = 100;
     private char[][] mapa = new char[Tamanox][Tamanoy];
-    private Scanner scanner = new Scanner(System.in);
     private Random rand = new Random(System.currentTimeMillis());
-    private Enemigo enemigo = new Enemigo("Minos","Enemigo",100,10,Tamanox /2,Tamanoy /2);
+    private Scanner scanner = new Scanner(System.in);
+    private Jugador jugador;
+    private Enemigo enemigo;
 
     public Laverinto(){
+        //nombre del jugador
+        System.out.println("ingrese el nombre del jugador: ");
+        String nombre = scanner.nextLine();
+
+        //iniciar el jugador
+        jugador = new Jugador(nombre,"jugador",10,1,0,1);
+
         int intentos = 0;
         boolean Posible = false;
         do{
@@ -26,23 +34,32 @@ public class Laverinto{
 
         if (!Posible){
             System.err.println("no se pudo generar el laverinto");
+            scanner.close();
             return;
+        }
+
+        //iniciar a Minos
+        enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
+        while(mapa[enemigo.getX()][enemigo.getY()] == '#'){
+            enemigo.setX(rand.nextInt(Tamanox));
+            enemigo.setY(rand.nextInt(Tamanoy));
         }
 
         while (true){
             mostrarMapa();
-            if (mapa[jugadorX][jugadorY] == 'S'){
-                System.out.println("felicidades escapastes");
+            if (mapa[jugador.getX()][jugador.getY()] == 'S'){
+                System.out.println("felicidades " + nombre + " escapastes");
                 guardarMapa();
                 break;
             }
-            if (jugadorX == enemigo.getX() $$ jugadorY == enemigo.getY()){
-                System.out.println("El minotauro te a comido");
+            if (jugador.getX() == enemigo.getX() && jugador.getY() == enemigo.getY()){
+                System.out.println("El minotauro te a devorado");
                 break;
             }
-            mover();
-            enemigo.mover(mapa,rand);
+            jugador.mover(mapa,scanner);//movimiento jugador
+            enemigo.mover(mapa,rand);//movimiento Minos
         }
+        scanner.close();
     }
 
     private void generarMapa(){
@@ -129,28 +146,34 @@ public class Laverinto{
     }
 
     private void mostrarMapa(){
+        System.out.println("Mapa del laverinto: ");
         for(int i = 0; i < Tamanox; i++){
             for(int j = 0; j < Tamanoy; j++){
-                if (i == jugadorX && j == jugadorY){
-                    System.out.println('P');
+                if (i == jugador.getX() && j == jugador.getY()){
+                    System.out.print('P');
                 }else if (i == enemigo.getX() && j == enemigo.getY()){
-                    System.out.println('M');
+                    System.out.print('M');
                 }else {
-                    System.out.println(mapa[i][j]);
+                    System.out.print(mapa[i][j]);
                 }
             }
-            System.out.println();
+            System.out.println("|"); //borde derecho
         }
     }
     private void guardarMapa(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("UltimoMapa.txt"))){
             for(int i = 0; i < Tamanox; i++){
                 for(int j = 0; j < Tamanoy; j++){
-                    writer.write(String.valueOf(mapa[i][j]));
+                    if (i == jugador.getX() && j == jugador.getY()){
+                        writer.write('P');
+                    } else if (i == enemigo.getX() && j == enemigo.getY()){
+                        writer.write('M');
+                    } else {
+                        writer.write(mapa[i][j]);
+                    }
                 }
-                if (i < Tamanox - 1){
-                    writer.newLine();
-                }
+                writer.write('|');
+                writer.newLine();
             }
             System.out.println("Mapa guardado correctamente");
         }catch (IOException e){
