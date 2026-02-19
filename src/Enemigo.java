@@ -21,7 +21,7 @@ public class Enemigo extends entidad{
         int dir = rand.nextInt(4);
         int newX = x + dx[dir];
         int newY = y + dy[dir];
-        if (newX >=0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newY][newX]!='#'){
+        if (newX >=0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newX][newY]!='#'){
             x=newX;
             y=newY;
         }
