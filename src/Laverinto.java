@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto{
-    private static final int Tamanox = 15;
-    private static final int Tamanoy = 25;
+    private static final int Tamanox = 5;
+    private static final int Tamanoy = 10;
     private static final int Max_intentos = 100;
     private char[][] mapa = new char[Tamanox][Tamanoy];
     private Random rand = new Random(System.currentTimeMillis());
@@ -43,6 +43,9 @@ public class Laverinto{
         while(mapa[enemigo.getX()][enemigo.getY()] == '#'){
             enemigo.setX(rand.nextInt(Tamanox));
             enemigo.setY(rand.nextInt(Tamanoy));
+        }if (mapa[enemigo.getX()][enemigo.getY()] == mapa[jugador.getX()][jugador.getY()]){
+            enemigo.setX(rand.nextInt(Tamanox));
+            enemigo.setY(rand.nextInt(Tamanoy));
         }
 
         while (true){
@@ -62,6 +65,7 @@ public class Laverinto{
         scanner.close();
     }
 
+    //generar el mapa
     private void generarMapa(){
         for(int i = 0; i < Tamanox; i++){
             Arrays.fill(mapa[i], '#');
@@ -74,10 +78,11 @@ public class Laverinto{
         for (int j = 0; j < Tamanoy; j++){
             mapa[Tamanox-1][j] = '#';
         }
-        mapa[0][1] = ' '; //entrada
+        mapa[0][1] = 'E'; //entrada
         mapa[Tamanox - 1][1]= 'S'; //salida
     }
 
+    //generar el camino
     private void camino(int x, int y){
         mapa[x][y]=' ';
         int[] direccion = {0,1,2,3};
