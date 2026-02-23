@@ -25,7 +25,7 @@ public class Enemigo extends entidad{
         //evitar moverse a las paredes
 
         //revisar
-        if (newX >=0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newY][newX]!='#'){
+        if (newX >= 0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newY][newX]!='#'){
             x=newX;
             y=newY;
         }
