@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto{
-    private static final int Tamanox = 5;
-    private static final int Tamanoy = 10;
+    private static final int Tamanox = 10;
+    private static final int Tamanoy = 20;
     private static final int Max_intentos = 100;
     private char[][] mapa = new char[Tamanox][Tamanoy];
     private Random rand = new Random(System.currentTimeMillis());

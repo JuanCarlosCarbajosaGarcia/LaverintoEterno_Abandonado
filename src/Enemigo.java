@@ -18,10 +18,13 @@ public class Enemigo extends entidad{
     public void mover(char[][] mapa, Random rand){
         int[] dx ={-1,0,1,0};
         int[] dy={0,1,0,-1};
-        int dir = rand.nextInt(4);
+        int dir;
+        dir = rand.nextInt(4);
         int newX = x + dx[dir];
         int newY = y + dy[dir];
         //evitar moverse a las paredes
+
+        //revisar
         if (newX >=0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newY][newX]!='#'){
             x=newX;
             y=newY;
