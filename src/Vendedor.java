@@ -2,10 +2,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Vendedor {
-    private Scanner oro = new Scanner(System.in);
-    private int nivelActual;
+    private final Scanner oro = new Scanner(System.in);
+    private final int nivelActual;
     Random num = new Random();
-    int vid = num.nextInt(5) +1;
+    int vid = num.nextInt(10) +1;
+    boolean armadura = true;
+    boolean arma = true;
 
     public Vendedor(int nivel){
         this.nivelActual=nivel;
@@ -15,14 +17,23 @@ public class Vendedor {
         boolean salir=false;
 
         while(!salir){
+
             System.out.println("\n=== ÁREA DE DESCANSO - NIVEL: " + nivelActual + " ===");
             System.out.println("Oro actual: " + jugador.getOro());
             System.out.println("Salud: " + jugador.getVida() + "/" + jugador.getVidaMax());
             System.out.println("daño: " + jugador.getDano());
             System.out.println("\n--- TIENDA ---");
             System.out.println("1. descansar (1 oro) - curacion completa");
-            System.out.println("2. armadura de " + (jugador.vidaMax + vid) + " (5 oro) - incrementa la vida maxima");
-            System.out.println("3. mejorar arma " + (jugador.dano + 5) + " (5 oro) - incrementa el daño");
+            if (armadura) {
+                System.out.println("2. armadura de " + (jugador.vidaMax + vid) + " (5 oro) - incrementa la vida maxima");
+            }else {
+                System.out.println("2. armaduras agotadas");
+            }
+            if (arma) {
+                System.out.println("3. mejorar arma " + (jugador.dano + 5) + " (5 oro) - incrementa el daño");
+            }else {
+                System.out.println("3. armas agotadas");
+            }
             System.out.println("F. ir al siguiente nivel");
             System.out.println("Q. salir del juego");
             System.out.println("que quieres hacer: ");
@@ -40,21 +51,31 @@ public class Vendedor {
                     }
                     break;
                 case "2":
-                    if (jugador.getOro() >= 5){
-                        jugador.restarOro(5);
-                        jugador.aumentarVidaMax(vid);
-                        System.out.println("ahora puedes aguantar mas daño");
+                    if (armadura){
+                        if (jugador.getOro() >= 5){
+                            jugador.restarOro(5);
+                            jugador.aumentarVidaMax(vid);
+                            armadura=false;
+                            System.out.println("ahora puedes aguantar mas daño");
+                        }else {
+                            System.out.println("Oro insuficiente");
+                        }
                     }else {
-                        System.out.println("Oro insuficiente");
+                    System.out.println("existencias agotadas");
                     }
                     break;
                 case "3":
-                    if (jugador.getOro() >= 5){
-                        jugador.restarOro(5);
-                        jugador.suvirDano(5);
-                        System.out.println("tu arma ahora hace mas daño");
+                    if (arma) {
+                        if ((jugador.getOro() >= 5) && (arma = true)) {
+                            jugador.restarOro(5);
+                            jugador.suvirDano(5);
+                            arma = false;
+                            System.out.println("tu arma ahora hace mas daño");
+                        } else {
+                            System.out.println("Oro insuficiente");
+                        }
                     }else {
-                        System.out.println("Oro insuficiente");
+                        System.out.println("existencias agotadas");
                     }
                     break;
                 case "f":

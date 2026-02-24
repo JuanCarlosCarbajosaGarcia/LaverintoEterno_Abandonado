@@ -10,18 +10,6 @@ public class entidad{
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getTipo() {
-        return Tipo;
-    }
-
-    public void setTipo(String tipo) {
-        Tipo = tipo;
-    }
-
     public int getVida() {
         return vida;
     }
@@ -34,16 +22,8 @@ public class entidad{
         return vidaMax;
     }
 
-    public void setVidaMax(int vidaMax) {
-        this.vidaMax = vidaMax;
-    }
-
     public int getDano() {
         return dano;
-    }
-
-    public void setDano(int dano) {
-        this.dano = dano;
     }
 
     public int getOro() {

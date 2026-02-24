@@ -7,10 +7,10 @@ public class Laverinto{
     private static final int Tamanox = 10;
     private static final int Tamanoy = 20;
     private static final int Max_intentos = 100;
-    private char[][] mapa = new char[Tamanox][Tamanoy];
-    private Random rand = new Random(System.currentTimeMillis());
-    private Scanner scanner = new Scanner(System.in);
-    private Jugador jugador;
+    private final char[][] mapa = new char[Tamanox][Tamanoy];
+    private final Random rand = new Random(System.currentTimeMillis());
+    private final Scanner scanner = new Scanner(System.in);
+    private final Jugador jugador;
     private Enemigo enemigo;
     private int nivel = 1;
     private boolean juego = true;
@@ -35,7 +35,7 @@ public class Laverinto{
         System.out.println("\n=== INICIANDO NIVEL " + nivel + " ===");
 
         //generar laverinto
-        boolean posible=false;
+        boolean posible;
         int intentos = 0;
 
         do {

@@ -26,7 +26,8 @@ public class Jugador extends entidad {
             case "d": newY++;
                 break; //derecha
             case "q": System.exit(0);
-                break; //salir
+            case "p": Vendedor vendedor = new Vendedor(0);vendedor.mostrarTienda(Jugador.this);
+                break;
             default: System.out.println("movimiento invalido");
                 return;
         }
@@ -57,7 +58,7 @@ public class Jugador extends entidad {
     }
 
     public String getNombre() {
-        return nombre;
+        return super.getNombre();
     }
 
     @Override

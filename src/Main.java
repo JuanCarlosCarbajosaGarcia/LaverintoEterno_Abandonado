@@ -1,5 +1,3 @@
-public class Main {
-    public static void main(String[] args) {
-        new Laverinto();
-    }
+void main() {
+    new Laverinto();
 }
