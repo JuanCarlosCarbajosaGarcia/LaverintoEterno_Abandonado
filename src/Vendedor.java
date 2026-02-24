@@ -18,6 +18,7 @@ public class Vendedor {
 
         while(!salir){
 
+            //menu dinamico
             System.out.println("\n=== ÁREA DE DESCANSO - NIVEL: " + nivelActual + " ===");
             System.out.println("Oro actual: " + jugador.getOro());
             System.out.println("Salud: " + jugador.getVida() + "/" + jugador.getVidaMax());
@@ -27,18 +28,22 @@ public class Vendedor {
             if (armadura) {
                 System.out.println("2. armadura de " + (jugador.vidaMax + vid) + " (5 oro) - incrementa la vida maxima");
             }else {
-                System.out.println("2. armaduras agotadas");
+                System.out.println("armaduras agotadas");
             }
             if (arma) {
-                System.out.println("3. mejorar arma " + (jugador.dano + 5) + " (5 oro) - incrementa el daño");
+                if (armadura) {
+                    System.out.println("3. mejorar arma " + (jugador.dano + 5) + " (5 oro) - incrementa el daño");
+                } else {
+                    System.out.println("2. mejorar arma " + (jugador.dano + 5) + " (5 oro) - incrementa el daño");
+                }
             }else {
-                System.out.println("3. armas agotadas");
+                System.out.println("armas agotadas");
             }
             System.out.println("F. ir al siguiente nivel");
             System.out.println("Q. salir del juego");
             System.out.println("que quieres hacer: ");
 
-            String opcion = oro.nextLine();
+            String opcion = oro.nextLine().toLowerCase();
 
             switch (opcion){
                 case "1":
@@ -61,12 +66,7 @@ public class Vendedor {
                             System.out.println("Oro insuficiente");
                         }
                     }else {
-                    System.out.println("existencias agotadas");
-                    }
-                    break;
-                case "3":
-                    if (arma) {
-                        if ((jugador.getOro() >= 5) && (arma = true)) {
+                        if (jugador.getOro() >= 5) {
                             jugador.restarOro(5);
                             jugador.suvirDano(5);
                             arma = false;
@@ -74,15 +74,27 @@ public class Vendedor {
                         } else {
                             System.out.println("Oro insuficiente");
                         }
-                    }else {
-                        System.out.println("existencias agotadas");
                     }
+                    break;
+                case "3":
+                        if (arma && armadura) {
+                            if ((jugador.getOro() >= 5) && (arma = true)) {
+                                jugador.restarOro(5);
+                                jugador.suvirDano(5);
+                                arma = false;
+                                System.out.println("tu arma ahora hace mas daño");
+                            } else {
+                                System.out.println("Oro insuficiente");
+                            }
+                        }else {
+                            System.out.println("operacion invalida");
+                        }
                     break;
                 case "f":
                     salir=true;
                     System.out.println("suerte en tu aventura");
                     break;
-                case "p": jugador.setOro(100);
+                case "p": jugador.setOro(100);System.out.println("oro puesto a 100");
                     break;
                 case "q":
                     System.out.println("¡gracias por jugar!");
