@@ -2,14 +2,10 @@ import java.util.Scanner;
 
 public class Jugador extends entidad {
     private int x,y;
-    private String nombre;
-    private String tipo;
-    private int vida;
-    private int dano;
 
-    public Jugador(String nombre, String Tipo, int vida, int dano, int starX, int starY) {
+    public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
-        super(nombre, Tipo, vida, dano);
+        super(nombre, Tipo, vida,dano);
 
         this.x = starX;
         this.y = starY;
@@ -50,6 +46,14 @@ public class Jugador extends entidad {
 
     public int getY() {
         return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public String getNombre() {

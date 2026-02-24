@@ -12,62 +12,131 @@ public class Laverinto{
     private Scanner scanner = new Scanner(System.in);
     private Jugador jugador;
     private Enemigo enemigo;
+    private int nivel = 1;
+    private boolean juego = true;
 
     public Laverinto(){
+        System.out.println("=== VIEMBENIDO AL LAVERINTO ETERNO ===");
         //nombre del jugador
         System.out.println("ingrese el nombre del jugador: ");
         String nombre = scanner.nextLine();
 
         //iniciar el jugador
-        jugador = new Jugador(nombre,"jugador",10,1,0,1);
+        jugador = new Jugador(nombre,"jugador",10,10,0,1);
 
-        int intentos = 0;
-        boolean Posible = false;
-        do{
-            generarMapa();
-            Posible = esPosible();
-            intentos++;
-            if (!Posible && intentos < Max_intentos){
-                System.out.println("Generando laverinto...  (intento " + intentos + ")");
-            }
-        }while(!Posible && intentos <Max_intentos);
-
-        if (!Posible){
-            System.err.println("no se pudo generar el laverinto");
-            scanner.close();
-            return;
-        }
-
-        //iniciar a Minos
-        enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
-
-        colocarEnemigos();
-
-        while (true){
-            mostrarMapa();
-            if (mapa[jugador.getX()][jugador.getY()] == 'S'){
-                System.out.println("felicidades " + nombre + " escapastes");
-                guardarMapa();
-                break;
-            }
-            if (jugador.getX() == enemigo.getX() && jugador.getY() == enemigo.getY()){
-                System.out.println("El minotauro te a devorado");
-                break;
-            }
-            jugador.mover(mapa,scanner);//movimiento jugador
-            enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+        //bucle de juego
+        while(juego){
+            iniciarNivel();
         }
         scanner.close();
     }
+
+    private void iniciarNivel(){
+        System.out.println("\n=== INICIANDO NIVEL " + nivel + " ===");
+
+        //generar laverinto
+        boolean posible=false;
+        int intentos = 0;
+
+        do {
+            generarMapa();
+            posible = esPosible();
+            intentos++;
+
+            if (!posible && intentos < Max_intentos){
+                System.out.println("Generando laverinto...  (intento " + intentos + ")");
+            }
+        } while(!posible && intentos <Max_intentos);
+
+        if (!posible){
+            System.err.println("no se pudo generar el nivel");
+            return;
+        }
+
+        enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
+        colocarEnemigos();
+
+        //resetear jugador
+        jugador.setX(0);
+        jugador.setY(1);
+
+        //bucle del nivel
+        boolean nivelActivo = true;
+
+        while (nivelActivo && juego){
+            mostrarMapa();
+            System.out.println("Nivel: " + nivel + " | Vida: " + jugador.getVida() + "/" + jugador.getVidaMax() + " | Oro: " + jugador.getOro() + " | Daño: " +jugador.getDano());
+
+            //termino el nivel el jugador
+            if (mapa[jugador.getX()][jugador.getY()] == 'S'){
+                System.out.println("\n¡Felicidades! Sobreviviste el nivel " + nivel);
+                nivel++;
+                jugador.setOro(jugador.getOro() + 1);
+                System.out.println("Ganaste: " + jugador.getOro() + " de Oro");
+
+                Vendedor vendedor = new Vendedor(nivel);
+                vendedor.mostrarTienda(jugador);
+
+                nivelActivo = false;
+                continue;
+            }
+
+            //ataque de enemigo
+            if (jugador.getX()==enemigo.getX() && jugador.getY()==enemigo.getY()){
+                System.out.println("El Minotauro te a atacado");
+                int danoRecibido = enemigo.getDano();
+                int danoHecho = jugador.getDano();
+                jugador.setVida(jugador.getVida() - danoRecibido);
+                System.out.println("reciviste " + danoRecibido + " de daño.");
+                enemigo.setVida(enemigo.getVida() - danoHecho);
+                System.out.println("le hiciste " + danoHecho + " de daño al enemigo.");
+
+                //jugador muere
+                if (!jugador.estaVivo()){
+                    System.out.println("el minotauro te ha devorado");
+                    System.out.println("alcanzaste el nivel: " + nivel);
+                    System.out.println("oro total: " + jugador.getOro());
+                    guardarMapa();
+                    juego = false;
+                    return;
+                }
+
+                //jugador sobrevive
+                separar();
+            }
+
+            jugador.mover(mapa,scanner);//movimiento jugador
+            enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+        }
+    }
+
+    private void separar(){
+    boolean movido = false;
+    int[] dx = {-1, 0, 1, 0};
+    int[] dy = {0, 1, 0, -1};
+
+        for (int i=0; i < 4 && !movido; i++){
+            int newX = jugador.getX() + dx[i];
+            int newY = jugador.getY() + dy[i];
+
+            if (newX >= 0 && newX < Tamanox && newY >= 0 && newY < Tamanoy && mapa[newX][newY]!= '#'){
+                jugador.setX(newX);
+                jugador.setY(newY);
+                movido = true;
+            }
+        }
+    }
+
     private void colocarEnemigos(){
         boolean posicionValida = false;
         while(!posicionValida){
             int newX = rand.nextInt(Tamanox);
             int newY = rand.nextInt(Tamanoy);
 
+            int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+
             //verificar la posicion
-            if (mapa[newX][newY]!='#' &&
-                !(newX == jugador.getX() && newY == jugador.getY())){
+            if (mapa[newX][newY]!='#' && distancia >= 5){
                 enemigo.setX(newX);
                 enemigo.setY(newY);
                 posicionValida = true;
