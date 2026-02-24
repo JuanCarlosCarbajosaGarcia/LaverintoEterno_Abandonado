@@ -43,9 +43,6 @@ public class Laverinto{
             posible = esPosible();
             intentos++;
 
-            if (!posible && intentos < Max_intentos){
-                System.out.println("Generando laverinto...  (intento " + intentos + ")");
-            }
         } while(!posible && intentos <Max_intentos);
 
         if (!posible){
