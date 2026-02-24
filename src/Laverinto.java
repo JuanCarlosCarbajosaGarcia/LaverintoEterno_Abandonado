@@ -14,6 +14,7 @@ public class Laverinto{
     private Enemigo enemigo;
     private int nivel = 1;
     private boolean juego = true;
+    private boolean primerJuego = true;
 
     public Laverinto(){
         System.out.println("=== VIEMBENIDO AL LAVERINTO ETERNO ===");
@@ -70,6 +71,8 @@ public class Laverinto{
                 nivel++;
                 jugador.setOro(jugador.getOro() + 1);
                 System.out.println("Ganaste: " + jugador.getOro() + " de Oro");
+
+                guardarMapa();
 
                 Vendedor vendedor = new Vendedor(nivel);
                 vendedor.mostrarTienda(jugador);
@@ -244,7 +247,19 @@ public class Laverinto{
         }
     }
     private void guardarMapa(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("UltimoMapa.txt"))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("Mapa.txt", !primerJuego))){
+            //encabezado del archivo
+            if(primerJuego){
+               writer.write("\n=== Laberinto de " + jugador.nombre + " ===");
+               writer.newLine();
+               writer.newLine();
+               primerJuego = false;
+            }
+
+            //indicador del nivel
+            writer.write("\n--- Nivel " + nivel + " ---");
+            writer.newLine();
+
             for(int i = 0; i < Tamanox; i++){
                 for(int j = 0; j < Tamanoy; j++){
                     if (i == jugador.getX() && j == jugador.getY()){
@@ -258,6 +273,7 @@ public class Laverinto{
                 writer.write('|');
                 writer.newLine();
             }
+            writer.newLine();
             System.out.println("Mapa guardado correctamente");
         }catch (IOException e){
             System.out.println("Error guardando mapa: " + e.getMessage());
