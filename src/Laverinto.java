@@ -69,7 +69,9 @@ public class Laverinto{
             if (mapa[jugador.getX()][jugador.getY()] == 'S'){
                 System.out.println("\n¡Felicidades! Sobreviviste el nivel " + nivel);
                 nivel++;
-                jugador.setOro(jugador.getOro() + 1);
+                Random num = new Random();
+                int premio = num.nextInt(5)+1;
+                jugador.setOro(jugador.getOro() + premio);
                 System.out.println("Ganaste: " + jugador.getOro() + " de Oro");
 
                 guardarMapa();
@@ -89,10 +91,14 @@ public class Laverinto{
                 jugador.setVida(jugador.getVida() - danoRecibido);
                 System.out.println("reciviste " + danoRecibido + " de daño.");
                 enemigo.setVida(enemigo.getVida() - danoHecho);
-                System.out.println("le hiciste " + danoHecho + " de daño al enemigo.");
 
-                //jugador muere
-                if (!jugador.estaVivo()){
+                if (jugador.estaVivo()) {
+                    //jugador sobrevive
+                    System.out.println("le hiciste " + danoHecho + " de daño al enemigo.");
+                    System.out.println("has escapado con vida.");
+                    separar();
+                } else {
+                    //jugador muere
                     System.out.println("el minotauro te ha devorado");
                     System.out.println("alcanzaste el nivel: " + nivel);
                     System.out.println("oro total: " + jugador.getOro());
@@ -100,9 +106,6 @@ public class Laverinto{
                     juego = false;
                     return;
                 }
-
-                //jugador sobrevive
-                separar();
             }
 
             jugador.mover(mapa,scanner);//movimiento jugador
@@ -111,20 +114,26 @@ public class Laverinto{
     }
 
     private void separar(){
-    boolean movido = false;
-    int[] dx = {-1, 0, 1, 0};
-    int[] dy = {0, 1, 0, -1};
+    int[] dx = {-2, 0, 2, 0};
+    int[] dy = {0, 2, 0, -2};
 
-        for (int i=0; i < 4 && !movido; i++){
-            int newX = jugador.getX() + dx[i];
-            int newY = jugador.getY() + dy[i];
+        //buscar celda valida
+        for (int s = 0; s < 4; s++) {
+            int newX = jugador.getX() + dx[s];
+            int newY = jugador.getY() + dy[s];
 
-            if (newX >= 0 && newX < Tamanox && newY >= 0 && newY < Tamanoy && mapa[newX][newY]!= '#'){
+            //verificar nueva posicion
+            if (newX >= 0 && newX < Tamanox && newY >= 0 && newY < Tamanoy && mapa[newX][newY] != '#' && (newX != enemigo.getX() || newY != enemigo.getY())) {
+
                 jugador.setX(newX);
                 jugador.setY(newY);
-                movido = true;
+                mostrarMapa();
+                return;
             }
         }
+
+        //si no puede moverse
+        System.out.println("¡No puedes moverte! Estas atrapado.");
     }
 
     private void colocarEnemigos(){
@@ -250,14 +259,16 @@ public class Laverinto{
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("Mapa.txt", !primerJuego))){
             //encabezado del archivo
             if(primerJuego){
-               writer.write("\n=== Laberinto de " + jugador.nombre + " ===");
+               writer.write("=== Laberinto de " + jugador.nombre + " ===");
                writer.newLine();
                writer.newLine();
                primerJuego = false;
             }
 
+            int nivelmapa = nivel -1;
+
             //indicador del nivel
-            writer.write("\n--- Nivel " + nivel + " ---");
+            writer.write("\n--- Nivel " + nivelmapa + " ---");
             writer.newLine();
 
             for(int i = 0; i < Tamanox; i++){

@@ -5,6 +5,9 @@ public class entidad{
     protected int vidaMax;
     protected int dano;
     protected int oro;
+    public boolean estaVivo(){
+        return vida > 0;
+    }
 
     public String getNombre() {
         return nombre;
@@ -60,9 +63,6 @@ public class entidad{
         this.oro = 0;
     }
 
-    public boolean estaVivo(){
-        return vida > 0;
-    }
 
     @Override
     public String toString() {

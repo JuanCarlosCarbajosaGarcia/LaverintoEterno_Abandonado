@@ -10,7 +10,7 @@ public class Vendedor {
     boolean arma = true;
 
     public Vendedor(int nivel){
-        this.nivelActual=nivel;
+        this.nivelActual=nivel -1;
     }
 
     public void mostrarTienda(Jugador jugador){
