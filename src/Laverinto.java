@@ -40,13 +40,8 @@ public class Laverinto{
 
         //iniciar a Minos
         enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
-        while(mapa[enemigo.getX()][enemigo.getY()] == '#'){
-            enemigo.setX(rand.nextInt(Tamanox));
-            enemigo.setY(rand.nextInt(Tamanoy));
-        }if (mapa[enemigo.getX()][enemigo.getY()] == mapa[jugador.getX()][jugador.getY()]){
-            enemigo.setX(rand.nextInt(Tamanox));
-            enemigo.setY(rand.nextInt(Tamanoy));
-        }
+
+        colocarEnemigos();
 
         while (true){
             mostrarMapa();
@@ -60,9 +55,24 @@ public class Laverinto{
                 break;
             }
             jugador.mover(mapa,scanner);//movimiento jugador
-            enemigo.mover(mapa,rand);//movimiento Minos
+            enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
         }
         scanner.close();
+    }
+    private void colocarEnemigos(){
+        boolean posicionValida = false;
+        while(!posicionValida){
+            int newX = rand.nextInt(Tamanox);
+            int newY = rand.nextInt(Tamanoy);
+
+            //verificar la posicion
+            if (mapa[newX][newY]!='#' &&
+                !(newX == jugador.getX() && newY == jugador.getY())){
+                enemigo.setX(newX);
+                enemigo.setY(newY);
+                posicionValida = true;
+            }
+        }
     }
 
     //generar el mapa
@@ -72,6 +82,8 @@ public class Laverinto{
         }
 
         camino(1,1);
+
+        //poner los bordes
         for (int i = 0; i < Tamanox; i++){
             mapa[i][Tamanoy-1] = '#';
         }

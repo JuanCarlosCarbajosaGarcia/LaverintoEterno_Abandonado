@@ -1,8 +1,8 @@
 public class entidad{
-    String nombre;
-    String Tipo;
-    int vida;
-    int dano;
+    protected String nombre;
+    protected String Tipo;
+    protected int vida;
+    protected int dano;
 
     public String getNombre() {
         return nombre;

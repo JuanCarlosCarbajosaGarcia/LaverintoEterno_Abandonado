@@ -8,12 +8,9 @@ public class Jugador extends entidad {
     private int dano;
 
     public Jugador(String nombre, String Tipo, int vida, int dano, int starX, int starY) {
+
         super(nombre, Tipo, vida, dano);
 
-        this.nombre = nombre;
-        this.tipo = Tipo;
-        this.vida = vida;
-        this.dano = dano;
         this.x = starX;
         this.y = starY;
     }
@@ -21,6 +18,7 @@ public class Jugador extends entidad {
     public void mover(char[][] mapa,Scanner sc){
         System.out.println("movimiento (w/a/s/d) para moverte arriva/izquierda/abajo/derecha, q para salir: ");
         String input = sc.nextLine().toLowerCase();
+
         int newX = x, newY = y;
         switch (input){
             case "w": newX--;
@@ -36,6 +34,8 @@ public class Jugador extends entidad {
             default: System.out.println("movimiento invalido");
                 return;
         }
+
+        //asegurarse de que el movimiento es posible
         if (newX >= 0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newX][newY] != '#'){
             x = newX;
             y = newY;
