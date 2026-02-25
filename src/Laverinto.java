@@ -10,7 +10,7 @@ public class Laverinto{
     private final char[][] mapa = new char[Tamanox][Tamanoy];
     private final Random rand = new Random(System.currentTimeMillis());
     private final Scanner scanner = new Scanner(System.in);
-    private final Jugador jugador;
+    private Jugador jugador;
     private Enemigo enemigo;
     private int nivel = 1;
     private boolean juego = true;
@@ -30,7 +30,6 @@ public class Laverinto{
         while(juego){
             iniciarNivel();
         }
-        scanner.close();
     }
 
     private void iniciarNivel(){
@@ -78,7 +77,13 @@ public class Laverinto{
                 guardarMapa();
 
                 Vendedor vendedor = new Vendedor(nivel);
-                vendedor.mostrarTienda(jugador);
+                boolean volveraMenu = vendedor.mostrarTienda(jugador);
+
+                if (volveraMenu){
+                    System.out.println("voviendo al menu principal");
+                    juego = false;
+                    return;
+                }
 
                 nivelActivo = false;
                 continue;
@@ -109,7 +114,14 @@ public class Laverinto{
                 }
             }
 
-            jugador.mover(mapa,scanner);//movimiento jugador
+            //movimiento jugador
+            boolean salirJuego=jugador.mover(mapa,scanner);
+            if (salirJuego){
+                System.out.println("volviendo al menu principal.....");
+                juego = false;
+                return;
+            }
+
             enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
         }
     }

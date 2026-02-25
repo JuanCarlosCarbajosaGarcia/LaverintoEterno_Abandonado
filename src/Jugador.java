@@ -11,7 +11,7 @@ public class Jugador extends entidad {
         this.y = starY;
     }
 
-    public void mover(char[][] mapa,Scanner sc){
+    public boolean mover(char[][] mapa, Scanner sc){
         System.out.println("que quieres hacer: ");
         String input = sc.nextLine().toLowerCase();
 
@@ -25,11 +25,15 @@ public class Jugador extends entidad {
                 break; //izquierda
             case "d": newY++;
                 break; //derecha
-            case "q": System.exit(0);
-            case "p": Vendedor vendedor = new Vendedor(1);vendedor.mostrarTienda(Jugador.this);
+            case "q":
+                System.out.println("volviendo al menu");
+                return true;
+            case "p": Vendedor vendedor = new Vendedor(1);
+                boolean volver = vendedor.mostrarTienda(this);
+                if(volver)return true;
                 break;
             default: System.out.println("movimiento invalido");
-                return;
+                return false;
         }
 
         //asegurarse de que el movimiento es posible
@@ -39,6 +43,7 @@ public class Jugador extends entidad {
         }else {
             System.out.println("eso es una pared");
         }
+        return false;
     }
 
     public int getX() {

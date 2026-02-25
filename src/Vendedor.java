@@ -14,7 +14,7 @@ public class Vendedor {
         this.nivelActual=nivel -1;
     }
 
-    public void mostrarTienda(Jugador jugador){
+    public boolean mostrarTienda(Jugador jugador){
         boolean salir=false;
 
         while(!salir){
@@ -94,19 +94,22 @@ public class Vendedor {
                         }
                     break;
                 case "f":
-                    salir=true;
                     System.out.println("suerte en tu aventura");
+                    salir=true;
                     break;
+
                 case "p":
                     System.out.println("cantidad de oro:");
                     jugador.setOro(sc.nextInt());System.out.println("oro puesto a: " + jugador.getOro());
                     break;
                 case "q":
-                    System.out.println("¡gracias por jugar!");
-                    
+                    System.out.println("volviendo al menu");
+                    return true;
+
                 default:
                     System.out.println("operacion invalida");
             }
         }
+        return false;
     }
 }
