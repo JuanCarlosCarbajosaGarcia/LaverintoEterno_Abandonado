@@ -45,6 +45,10 @@ static void mostrarControles() {
     System.out.println("A. ir hacia la izquierda");
     System.out.println("D. ir hacia la derecha");
     System.out.println("Q. salir del juego");
+    System.out.println("el jugador esta represntado po una P");
+    System.out.println("el minotauro(Minos) esta representado por una M");
+    System.out.println("cada accion consume un turno");
+    System.out.println("puedes pulsar enter sin introducir ordenes para pasar el turno");
     System.out.println("enter para continuar");
     sc.nextLine();
     sc.nextLine();
