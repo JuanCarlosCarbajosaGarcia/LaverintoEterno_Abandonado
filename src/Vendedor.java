@@ -48,7 +48,7 @@ public class Vendedor {
             switch (opcion){
                 case "1":
                     if (jugador.getOro() >= 1){
-                        jugador.restarOro(1);
+                        jugador.restarOro(jugador.getOro()-1);
                         jugador.curar();
                         System.out.println("te sientes revitalizado");
                     }else {
@@ -58,7 +58,7 @@ public class Vendedor {
                 case "2":
                     if (armadura){
                         if (jugador.getOro() >= 5){
-                            jugador.restarOro(5);
+                            jugador.restarOro(jugador.getOro()-5);
                             jugador.aumentarVidaMax(vid);
                             armadura=false;
                             System.out.println("ahora puedes aguantar mas daño");
@@ -67,19 +67,21 @@ public class Vendedor {
                         }
                     }else {
                         if (jugador.getOro() >= 5) {
-                            jugador.restarOro(5);
+                            jugador.restarOro(jugador.getOro()-5);
                             jugador.suvirDano(5);
                             arma = false;
                             System.out.println("tu arma ahora hace mas daño");
                         } else {
                             System.out.println("Oro insuficiente");
                         }
+                    }if (!arma&&!armadura){
+                        System.out.println("operacion invalida");
                     }
                     break;
                 case "3":
                         if (arma && armadura) {
                             if ((jugador.getOro() >= 5) && (arma = true)) {
-                                jugador.restarOro(5);
+                                jugador.restarOro(jugador.getOro()-5);
                                 jugador.suvirDano(5);
                                 arma = false;
                                 System.out.println("tu arma ahora hace mas daño");
@@ -94,7 +96,7 @@ public class Vendedor {
                     salir=true;
                     System.out.println("suerte en tu aventura");
                     break;
-                case "p": jugador.setOro(100);System.out.println("oro puesto a 100");
+                case "p": jugador.setOro(10);System.out.println("oro puesto a 10");
                     break;
                 case "q":
                     System.out.println("¡gracias por jugar!");

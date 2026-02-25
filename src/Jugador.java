@@ -26,7 +26,7 @@ public class Jugador extends entidad {
             case "d": newY++;
                 break; //derecha
             case "q": System.exit(0);
-            case "p": Vendedor vendedor = new Vendedor(0);vendedor.mostrarTienda(Jugador.this);
+            case "p": Vendedor vendedor = new Vendedor(1);vendedor.mostrarTienda(Jugador.this);
                 break;
             default: System.out.println("movimiento invalido");
                 return;

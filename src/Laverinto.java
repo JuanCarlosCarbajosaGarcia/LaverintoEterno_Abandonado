@@ -24,6 +24,7 @@ public class Laverinto{
 
         //iniciar el jugador
         jugador = new Jugador(nombre,"jugador",10,10,0,1);
+        jugador.setOro(0);
 
         //bucle de juego
         while(juego){
@@ -72,7 +73,7 @@ public class Laverinto{
                 Random num = new Random();
                 int premio = num.nextInt(5)+1;
                 jugador.setOro(jugador.getOro() + premio);
-                System.out.println("Ganaste: " + jugador.getOro() + " de Oro");
+                System.out.println("Ganaste: " + premio + " de Oro");
 
                 guardarMapa();
 
