@@ -8,6 +8,7 @@ public class Vendedor {
     int vid = num.nextInt(10) +1;
     boolean armadura = true;
     boolean arma = true;
+    private final Scanner sc = new Scanner(System.in);
 
     public Vendedor(int nivel){
         this.nivelActual=nivel -1;
@@ -96,11 +97,13 @@ public class Vendedor {
                     salir=true;
                     System.out.println("suerte en tu aventura");
                     break;
-                case "p": jugador.setOro(10);System.out.println("oro puesto a 10");
+                case "p":
+                    System.out.println("cantidad de oro:");
+                    jugador.setOro(sc.nextInt());System.out.println("oro puesto a: " + jugador.getOro());
                     break;
                 case "q":
                     System.out.println("¡gracias por jugar!");
-                    System.exit(0);
+                    
                 default:
                     System.out.println("operacion invalida");
             }

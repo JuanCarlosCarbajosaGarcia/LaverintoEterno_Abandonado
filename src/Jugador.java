@@ -12,7 +12,7 @@ public class Jugador extends entidad {
     }
 
     public void mover(char[][] mapa,Scanner sc){
-        System.out.println("movimiento (w/a/s/d) para moverte arriva/izquierda/abajo/derecha, q para salir: ");
+        System.out.println("que quieres hacer: ");
         String input = sc.nextLine().toLowerCase();
 
         int newX = x, newY = y;
