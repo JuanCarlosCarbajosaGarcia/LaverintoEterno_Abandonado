@@ -17,7 +17,7 @@ public class Laverinto{
     private boolean primerJuego = true;
 
     public Laverinto(){
-        System.out.println("=== VIEMBENIDO AL LAVERINTO ETERNO ===");
+        System.out.println("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
         //nombre del jugador
         System.out.println("ingrese el nombre del jugador: ");
         String nombre = scanner.nextLine();
