@@ -1,8 +1,10 @@
+package Proyecto;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Enemigo extends entidad{
+public class Enemigo extends Entidad{
     private int x,y;
 
     public Enemigo(String nombre, String Tipo, int vida, int dano, int starX, int starY) {
@@ -51,10 +53,5 @@ public class Enemigo extends entidad{
 
     public void setY(int y) {
         this.y = y;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

@@ -1,7 +1,9 @@
+package Proyecto;
 import java.util.Scanner;
 
-public class Jugador extends entidad {
+public class Jugador extends Entidad {
     private int x,y;
+    private Scanner scanner;
 
     public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
@@ -9,6 +11,7 @@ public class Jugador extends entidad {
 
         this.x = starX;
         this.y = starY;
+        this.scanner = new Scanner(System.in);
     }
 
     public boolean mover(char[][] mapa, Scanner sc){
@@ -25,10 +28,11 @@ public class Jugador extends entidad {
                 break; //izquierda
             case "d": newY++;
                 break; //derecha
-            case "q":
+            case "q": //volver al menu
                 System.out.println("volviendo al menu");
                 return true;
-            case "p": Vendedor vendedor = new Vendedor(1);
+            case "p": //abrir tienda
+                Vendedor vendedor = new Vendedor(1);
                 boolean volver = vendedor.mostrarTienda(this);
                 if(volver)return true;
                 break;
@@ -60,14 +64,5 @@ public class Jugador extends entidad {
 
     public void setY(int y) {
         this.y = y;
-    }
-
-    public String getNombre() {
-        return super.getNombre();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

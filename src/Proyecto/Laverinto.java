@@ -1,15 +1,21 @@
+package Proyecto;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class Laverinto{
+public class Laverinto implements ILaberinto, IJuego{
     private static final int Tamanox = 10;
     private static final int Tamanoy = 20;
     private static final int Max_intentos = 100;
+
     private final char[][] mapa = new char[Tamanox][Tamanoy];
     private final Random rand = new Random(System.currentTimeMillis());
     private final Scanner scanner = new Scanner(System.in);
+
+    private final IInterfaz interfaz = new InterfazConsola();
+
     private Jugador jugador;
     private Enemigo enemigo;
     private int nivel = 1;
@@ -17,10 +23,14 @@ public class Laverinto{
     private boolean primerJuego = true;
 
     public Laverinto(){
-        System.out.println("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
+        interfaz.mostrarMensaje("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
         //nombre del jugador
-        System.out.println("ingrese el nombre del jugador: ");
-        String nombre = scanner.nextLine();
+        String nombre = interfaz.pedirLinea("ingrese el nombre del jugador: ");
+
+        if (nombre == null||nombre.trim().isEmpty()){
+            //referencia a libro
+            nombre = "Maze_Runer";
+        }
 
         //iniciar el jugador
         jugador = new Jugador(nombre,"jugador",10,10,0,1);
@@ -32,8 +42,9 @@ public class Laverinto{
         }
     }
 
-    private void iniciarNivel(){
-        System.out.println("\n=== INICIANDO NIVEL " + nivel + " ===");
+    @Override
+    public void iniciarNivel(){
+        interfaz.mostrarMensaje("\n=== INICIANDO NIVEL " + nivel + " ===");
 
         //generar laverinto
         boolean posible;
@@ -47,7 +58,7 @@ public class Laverinto{
         } while(!posible && intentos <Max_intentos);
 
         if (!posible){
-            System.err.println("no se pudo generar el nivel");
+            interfaz.mostrarError("no se pudo generar el nivel");
             return;
         }
 
@@ -63,24 +74,25 @@ public class Laverinto{
 
         while (nivelActivo && juego){
             mostrarMapa();
-            System.out.println("Nivel: " + nivel + " | Vida: " + jugador.getVida() + "/" + jugador.getVidaMax() + " | Oro: " + jugador.getOro() + " | Daño: " +jugador.getDano());
+            interfaz.mostrarInfo(nivel,jugador.getVida(),jugador.getVidaMax(),jugador.getOro(),jugador.getDano());
 
             //termino el nivel el jugador
             if (mapa[jugador.getX()][jugador.getY()] == 'S'){
-                System.out.println("\n¡Felicidades! Sobreviviste el nivel " + nivel);
+                interfaz.mostrarExito("\n¡Felicidades! Sobreviviste el nivel " + nivel);
                 nivel++;
                 Random num = new Random();
                 int premio = num.nextInt(5)+1;
                 jugador.setOro(jugador.getOro() + premio);
-                System.out.println("Ganaste: " + premio + " de Oro");
+                interfaz.mostrarMensaje("Ganaste: " + premio + " de Oro");
 
                 guardarMapa();
 
+                //ir al vendedor
                 Vendedor vendedor = new Vendedor(nivel);
                 boolean volveraMenu = vendedor.mostrarTienda(jugador);
 
                 if (volveraMenu){
-                    System.out.println("voviendo al menu principal");
+                    interfaz.mostrarMensaje("voviendo al menu principal");
                     juego = false;
                     return;
                 }
@@ -91,23 +103,26 @@ public class Laverinto{
 
             //ataque de enemigo
             if (jugador.getX()==enemigo.getX() && jugador.getY()==enemigo.getY()){
-                System.out.println("El Minotauro te a atacado");
+                interfaz.mostrarMensaje("El Minotauro te a atacado");
+
                 int danoRecibido = enemigo.getDano();
                 int danoHecho = jugador.getDano();
+
                 jugador.setVida(jugador.getVida() - danoRecibido);
-                System.out.println("reciviste " + danoRecibido + " de daño.");
+                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
+
                 enemigo.setVida(enemigo.getVida() - danoHecho);
 
                 if (jugador.estaVivo()) {
                     //jugador sobrevive
-                    System.out.println("le hiciste " + danoHecho + " de daño al enemigo.");
-                    System.out.println("has escapado con vida.");
+                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
+                    interfaz.mostrarExito("has escapado con vida.");
                     separar();
                 } else {
                     //jugador muere
-                    System.out.println("el minotauro te ha devorado");
-                    System.out.println("alcanzaste el nivel: " + nivel);
-                    System.out.println("oro total: " + jugador.getOro());
+                    interfaz.mostrarError("el minotauro te ha devorado");
+                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                    interfaz.mostrarMensaje("oro total: " + jugador.getOro());
                     guardarMapa();
                     juego = false;
                     return;
@@ -117,12 +132,31 @@ public class Laverinto{
             //movimiento jugador
             boolean salirJuego=jugador.mover(mapa,scanner);
             if (salirJuego){
-                System.out.println("volviendo al menu principal.....");
+                interfaz.mostrarMensaje("volviendo al menu principal.....");
                 juego = false;
                 return;
             }
 
             enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+        }
+    }
+
+    @Override
+    public boolean estaActivo() {
+        return juego;
+    }
+
+    @Override
+    public void terminarJuego() {
+        juego = false;
+    }
+
+    private void limpiarPantalla() {
+        System.out.println("\n");
+        try{
+            Thread.sleep(500);
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -146,7 +180,7 @@ public class Laverinto{
         }
 
         //si no puede moverse
-        System.out.println("¡No puedes moverte! Estas atrapado.");
+        interfaz.mostrarError("¡No puedes moverte! Estas atrapado.");
     }
 
     private void colocarEnemigos(){
@@ -167,7 +201,8 @@ public class Laverinto{
     }
 
     //generar el mapa
-    private void generarMapa(){
+    @Override
+    public void generarMapa(){
         for(int i = 0; i < Tamanox; i++){
             Arrays.fill(mapa[i], '#');
         }
@@ -224,7 +259,8 @@ public class Laverinto{
         }
     }
 
-    private boolean esPosible(){
+    @Override
+    public boolean esPosible(){
         boolean[][] comprobado = new boolean[Tamanox][Tamanoy];
         Queue<int[]> cola = new LinkedList<>();
         cola.add(new int[]{0,1}); //entrada
@@ -253,21 +289,49 @@ public class Laverinto{
         return false;
     }
 
-    private void mostrarMapa(){
-        System.out.println("Mapa del laverinto: ");
+    @Override
+    public void mostrarMapa(){
+        System.out.println("\n"+ InterfazConsola.CIAN+"Mapa del laverinto:");
         for(int i = 0; i < Tamanox; i++){
             for(int j = 0; j < Tamanoy; j++){
                 if (i == jugador.getX() && j == jugador.getY()){
-                    System.out.print('P');
+                    System.out.print(InterfazConsola.VERDE+'P'+InterfazConsola.RESET);
                 }else if (i == enemigo.getX() && j == enemigo.getY()){
-                    System.out.print('M');
-                }else {
+                    System.out.print(InterfazConsola.ROJO+'M'+InterfazConsola.RESET);
+                } else if (mapa[i][j]=='E') {
+                    System.out.print(InterfazConsola.AZUL+'E'+InterfazConsola.RESET);
+                } else if (mapa[i][j]=='S') {
+                    System.out.print(InterfazConsola.VERDE_CLARO+'S'+InterfazConsola.RESET);
+                } else if (mapa[i][j]=='#') {
+                    System.out.print(InterfazConsola.GRIS+'#'+InterfazConsola.RESET);
+                } else {
                     System.out.print(mapa[i][j]);
                 }
             }
             System.out.println("|"); //borde derecho
         }
     }
+
+    @Override
+    public void mostrarMenu(){
+
+    }
+
+    @Override
+    public char[][] getMapa() {
+        return mapa;
+    }
+
+    @Override
+    public int[] getEntrada() {
+        return new int[]{0,1};
+    }
+
+    @Override
+    public int[] getSalida() {
+        return new int[]{Tamanox -1,1};
+    }
+
     private void guardarMapa(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("Mapa.txt", !primerJuego))){
             //encabezado del archivo
@@ -298,9 +362,9 @@ public class Laverinto{
                 writer.newLine();
             }
             writer.newLine();
-            System.out.println("Mapa guardado correctamente");
+            interfaz.mostrarExito("Mapa guardado correctamente");
         }catch (IOException e){
-            System.out.println("Error guardando mapa: " + e.getMessage());
+            interfaz.mostrarError("Error guardando mapa: " + e.getMessage());
         }
     }
 }
