@@ -1,5 +1,3 @@
-package Proyecto;
-
 import java.util.Scanner;
 
 public class InterfazConsola implements IInterfaz{
@@ -25,15 +23,15 @@ public class InterfazConsola implements IInterfaz{
         // Intentar limpiar la pantalla
         try {
             String sistema = System.getProperty("os.name");
-            if (sistema.contains("Windows")) {
+
+            if (sistema!=null && sistema.toLowerCase().contains("windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
+            }else {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
             }
-        } catch (Exception e) {
-            // Si no funciona, imprimir líneas en blanco
-            for (int i = 0; i < 50; i++) {
+        }catch(Exception e){
+            for (int i=0;i<50;i++) {
                 System.out.println();
             }
         }

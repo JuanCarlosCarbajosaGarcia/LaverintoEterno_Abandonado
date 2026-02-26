@@ -1,4 +1,3 @@
-package Proyecto;
 import java.util.Scanner;
 
 public class Jugador extends Entidad {

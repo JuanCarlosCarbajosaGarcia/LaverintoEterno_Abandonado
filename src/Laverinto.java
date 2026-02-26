@@ -1,5 +1,3 @@
-package Proyecto;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -73,6 +71,8 @@ public class Laverinto implements ILaberinto, IJuego{
         boolean nivelActivo = true;
 
         while (nivelActivo && juego){
+            interfaz.limpiarPantalla();
+
             mostrarMapa();
             interfaz.mostrarInfo(nivel,jugador.getVida(),jugador.getVidaMax(),jugador.getOro(),jugador.getDano());
 
@@ -149,15 +149,6 @@ public class Laverinto implements ILaberinto, IJuego{
     @Override
     public void terminarJuego() {
         juego = false;
-    }
-
-    private void limpiarPantalla() {
-        System.out.println("\n");
-        try{
-            Thread.sleep(500);
-        }catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }
     }
 
     private void separar(){

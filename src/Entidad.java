@@ -1,4 +1,3 @@
-package Proyecto;
 public class Entidad implements IEntidad {
 
     protected String nombre;

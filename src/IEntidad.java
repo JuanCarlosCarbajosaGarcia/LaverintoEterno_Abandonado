@@ -1,5 +1,3 @@
-package Proyecto;
-
 public interface IEntidad {
 
     String getNombre();

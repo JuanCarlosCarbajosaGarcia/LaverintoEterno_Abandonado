@@ -1,5 +1,3 @@
-package Proyecto;
-
 public interface ILaberinto {
     void generarMapa();
     boolean esPosible();

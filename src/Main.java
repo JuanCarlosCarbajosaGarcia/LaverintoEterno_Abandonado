@@ -1,7 +1,3 @@
-import Proyecto.IInterfaz;
-import Proyecto.InterfazConsola;
-import Proyecto.Laverinto;
-
 static Scanner sc = new Scanner(System.in);
 static boolean juegoA = true;
 static IInterfaz interfaz = new InterfazConsola();
