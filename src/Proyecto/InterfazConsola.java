@@ -18,7 +18,7 @@ public class InterfazConsola implements IInterfaz{
     public static final String ROJO_CLARO = "\u001B[91m";
     public static final String VERDE_CLARO = "\u001B[92m";
 
-    private Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     @Override
     public void limpiarPantalla() {
@@ -72,7 +72,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║       MENÚ PRINCIPAL       ║");
         System.out.println("╠════════════════════════════╣");
         System.out.println("║  "+ VERDE +"1. JUGAR"+ CIAN +"                  ║");
-        System.out.println("║  "+ BLANCO +"2. INSTRUCCIONES"+ CIAN +"          ║");
+        System.out.println("║  "+ AZUL +"2. INSTRUCCIONES"+ CIAN +"          ║");
         System.out.println("║  "+ ROJO +"3. SALIR"+ CIAN +"                  ║");
         System.out.println("╚════════════════════════════╝");
         System.out.println(RESET);
@@ -84,44 +84,38 @@ public class InterfazConsola implements IInterfaz{
     public void mostrarControles() {
         System.out.println(CIAN + NEGRITA);
         System.out.println("╔══════════════════════════════════════════════════════════════╗");
-        System.out.println("║                    📖 INSTRUCCIONES 📖                        ║");
+        System.out.println("║                         INSTRUCCIONES                        ║");
         System.out.println("╠══════════════════════════════════════════════════════════════╣");
         System.out.println("║                                                              ║");
-        System.out.println("║  " + VERDE + "🎯 OBJETIVO:" + CIAN + "                                                  ║");
-        System.out.println("║  Escapa del laberinto evitando al Minotauro (Minos).          ║");
+        System.out.println("║  " + VERDE + "OBJETIVO:" + CIAN + "                                                   ║");
+        System.out.println("║  Escapa del laberinto evitando al Minotauro (Minos).         ║");
         System.out.println("║  Cada nivel tiene una salida (S) que debes encontrar.        ║");
         System.out.println("║                                                              ║");
-        System.out.println("║  " + AMARILLO + "⌨️  CONTROLES:" + CIAN + "                                              ║");
-        System.out.println("║  ┌─────────┬──────────────────────────────────────┐         ║");
-        System.out.println("║  │   W     │  Moverse hacia ARRIBA               │         ║");
-        System.out.println("║  │   S     │  Moverse hacia ABAJO                 │         ║");
-        System.out.println("║  │   A     │  Moverse hacia la IZQUIERDA          │         ║");
-        System.out.println("║  │   D     │  Moverse hacia la DERECHA            │         ║");
-        System.out.println("║  │   Q     │  Volver al menú principal           │         ║");
-        System.out.println("║  │   P     │  Abrir tienda                        │         ║");
-        System.out.println("║  └─────────┴──────────────────────────────────────┘         ║");
+        System.out.println("║  " + AMARILLO + "  CONTROLES:" + CIAN + "                                                ║");
+        System.out.println("║  ┌─────────┬──────────────────────────────────────┐          ║");
+        System.out.println("║  │   W     │  Moverse hacia ARRIBA                │          ║");
+        System.out.println("║  │   S     │  Moverse hacia ABAJO                 │          ║");
+        System.out.println("║  │   A     │  Moverse hacia la IZQUIERDA          │          ║");
+        System.out.println("║  │   D     │  Moverse hacia la DERECHA            │          ║");
+        System.out.println("║  │   Q     │  Volver al menú principal            │          ║");
+        System.out.println("║  └─────────┴──────────────────────────────────────┘          ║");
         System.out.println("║                                                              ║");
-        System.out.println("║  " + MAGENTA + "👤 SÍMBOLOS:" + CIAN + "                                                 ║");
-        System.out.println("║  ┌─────────┬──────────────────────────────────────┐         ║");
-        System.out.println("║  │   P     │  TU PERSONAJE (Jugador)             │         ║");
-        System.out.println("║  │   M     │  EL MINOTAURO (Enemigo)             │         ║");
-        System.out.println("║  │   E     │  ENTRADA del laberinto              │         ║");
-        System.out.println("║  │   S     │  SALIDA del laberinto               │         ║");
-        System.out.println("║  │   #     │  PARED (No se puede pasar)         │         ║");
-        System.out.println("║  │   █     │  CAMINO LIBRE                       │         ║");
-        System.out.println("║  └─────────┴──────────────────────────────────────┘         ║");
+        System.out.println("║  " + MAGENTA + "SÍMBOLOS:" + CIAN + "                                                   ║");
+        System.out.println("║  ┌─────────┬──────────────────────────────────────┐          ║");
+        System.out.println("║  │   P     │  TU PERSONAJE (Jugador)              │          ║");
+        System.out.println("║  │   M     │  EL MINOTAURO (Enemigo)              │          ║");
+        System.out.println("║  │   E     │  ENTRADA del laberinto               │          ║");
+        System.out.println("║  │   S     │  SALIDA del laberinto                │          ║");
+        System.out.println("║  │   #     │  PARED (No se puede pasar)           │          ║");
+        System.out.println("║  │   █     │  CAMINO LIBRE                        │          ║");
+        System.out.println("║  └─────────┴──────────────────────────────────────┘          ║");
         System.out.println("║                                                              ║");
-        System.out.println("║  " + ROJO + "⚔️  COMBATE:" + CIAN + "                                                  ║");
-        System.out.println("║  Si te encuentras con M, ¡combatirás! Cada turno ambos       ║");
-        System.out.println("║  inflictís daño. ¡Sobrevive y llega a la salida!             ║");
-        System.out.println("║                                                              ║");
-        System.out.println("║  " + CIAN + "══════════════════════════════════════════════════════════════║");
-        System.out.println("║                                                              ║");
-        System.out.println("║         " + VERDE + "  [ENTER] Volver al menú principal" + CIAN + "              ║");
+        System.out.println("║  " + ROJO + "COMBATE:" + CIAN + "                                                    ║");
+        System.out.println("║  Si te encuentras con M, ¡combatirás! ambos sufrireis daño   ║");
+        System.out.println("║              ¡Sobrevive y llega a la salida!                 ║");
         System.out.println("║                                                              ║");
         System.out.println("╚══════════════════════════════════════════════════════════════╝");
         System.out.println(RESET);
-        sc.nextLine();
     }
 
     @Override

@@ -41,16 +41,13 @@ static void mostrarMenu() {
 }
 
 static void iniciarJuego() {
-    sc.nextLine();
     new Laverinto();
 }
 
 static void mostrarControles() {
-    sc.nextLine();
     interfaz.mostrarControles();
 }
 
 static void mostrarSalida() {
-    sc.nextLine();
     interfaz.mostrarSalida();
 }

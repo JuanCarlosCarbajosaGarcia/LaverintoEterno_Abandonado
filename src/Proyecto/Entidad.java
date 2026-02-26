@@ -76,7 +76,7 @@ public class Entidad implements IEntidad {
 
     @Override
     public void restarOro(int cantidad) {
-        this.oro = Math.max(0, this.oro - cantidad);
+        this.oro = this.oro - cantidad;
     }
 
     @Override

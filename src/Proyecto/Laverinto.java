@@ -16,7 +16,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
     private final IInterfaz interfaz = new InterfazConsola();
 
-    private Jugador jugador;
+    private final Jugador jugador;
     private Enemigo enemigo;
     private int nivel = 1;
     private boolean juego = true;
@@ -78,12 +78,12 @@ public class Laverinto implements ILaberinto, IJuego{
 
             //termino el nivel el jugador
             if (mapa[jugador.getX()][jugador.getY()] == 'S'){
-                interfaz.mostrarExito("\n¡Felicidades! Sobreviviste el nivel " + nivel);
+                interfaz.mostrarExito("¡Felicidades! Sobreviviste el nivel " + nivel);
                 nivel++;
                 Random num = new Random();
                 int premio = num.nextInt(5)+1;
                 jugador.setOro(jugador.getOro() + premio);
-                interfaz.mostrarMensaje("Ganaste: " + premio + " de Oro");
+                interfaz.mostrarMensaje(InterfazConsola.AMARILLO+"Ganaste: " + premio + " de Oro"+InterfazConsola.RESET);
 
                 guardarMapa();
 
@@ -122,7 +122,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     //jugador muere
                     interfaz.mostrarError("el minotauro te ha devorado");
                     interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                    interfaz.mostrarMensaje("oro total: " + jugador.getOro());
+                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO+"oro total: " + jugador.getOro()+InterfazConsola.RESET);
                     guardarMapa();
                     juego = false;
                     return;
