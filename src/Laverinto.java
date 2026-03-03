@@ -334,6 +334,9 @@ public class Laverinto implements ILaberinto, IJuego{
             }
 
             int nivelmapa = nivel -1;
+            if(!jugador.estaVivo()){
+                nivelmapa++;
+            }
 
             //indicador del nivel
             writer.write("\n--- Nivel " + nivelmapa + " ---");
