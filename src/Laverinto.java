@@ -33,6 +33,7 @@ public class Laverinto implements ILaberinto, IJuego{
         //iniciar el jugador
         jugador = new Jugador(nombre,"jugador",10,10,0,1);
         jugador.setOro(0);
+        jugador.estaVivo();
 
         //bucle de juego
         while(juego){
@@ -62,6 +63,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
         enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
         colocarEnemigos();
+        enemigo.estaVivo();
 
         //resetear jugador
         jugador.setX(0);
@@ -137,7 +139,15 @@ public class Laverinto implements ILaberinto, IJuego{
                 return;
             }
 
-            enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+            if (enemigo.estaVivo()){
+                //minos vive
+                enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+            }else {
+                //minos muere
+                interfaz.mostrarMensaje("El minotauro a muerto");
+                enemigo.setX(mapa.length+1);
+                enemigo.setY(mapa.length+1);
+            }
         }
     }
 
@@ -175,20 +185,20 @@ public class Laverinto implements ILaberinto, IJuego{
     }
 
     private void colocarEnemigos(){
-        boolean posicionValida = false;
-        while(!posicionValida){
-            int newX = rand.nextInt(Tamanox);
-            int newY = rand.nextInt(Tamanoy);
+            boolean posicionValida = false;
+            while (!posicionValida) {
+                int newX = rand.nextInt(Tamanox);
+                int newY = rand.nextInt(Tamanoy);
 
-            int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
 
-            //verificar la posicion
-            if (mapa[newX][newY]!='#' && distancia >= 5){
-                enemigo.setX(newX);
-                enemigo.setY(newY);
-                posicionValida = true;
+                //verificar la posicion
+                if (mapa[newX][newY] != '#' && distancia >= 5) {
+                    enemigo.setX(newX);
+                    enemigo.setY(newY);
+                    posicionValida = true;
+                }
             }
-        }
     }
 
     //generar el mapa

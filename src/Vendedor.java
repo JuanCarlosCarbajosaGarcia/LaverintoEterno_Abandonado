@@ -10,6 +10,7 @@ public class Vendedor implements IVendedor{
     int vid = num.nextInt(10) +1;
     boolean armadura = true;
     boolean arma = true;
+    boolean tiendaPruebas=false;
     private final Scanner sc = new Scanner(System.in);
 
     public Vendedor(int nivel){
@@ -105,8 +106,42 @@ public class Vendedor implements IVendedor{
                     break;
 
                 case "p":
-                    interfaz.mostrarMensaje("cantidad de oro:");
-                    jugador.setOro(sc.nextInt());interfaz.mostrarMensaje("oro puesto a: " + jugador.getOro());
+                    tiendaPruebas=true;
+                    while (tiendaPruebas){
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "menu de pruebas" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "opciones:" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "1: oro" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "2: arma" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "3: armadura" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "4: curar" + InterfazConsola.RESET);
+                        interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "5: Salir" + InterfazConsola.RESET);
+
+                        String Pruebas = oro.nextLine().toLowerCase();
+
+                        switch (Pruebas) {
+                            case "1":
+                                interfaz.mostrarMensaje("cantidad de oro:");
+                                jugador.setOro(sc.nextInt());
+                                interfaz.mostrarMensaje("oro puesto a: " + jugador.getOro());
+                                break;
+                            case "2":
+                                interfaz.mostrarMensaje("cantidad de daño:");
+                                jugador.subirDano(sc.nextInt());
+                                interfaz.mostrarMensaje("daño aumentado: " + jugador.getDano());
+                                break;
+                            case "3":
+                                interfaz.mostrarMensaje("cantidad de armadura:");
+                                jugador.aumentarVidaMax(sc.nextInt());
+                                interfaz.mostrarMensaje("armadura aumentada: " + jugador.getVidaMax());
+                                break;
+                            case "4":
+                                jugador.curar();
+                                interfaz.mostrarMensaje("curacion completada");
+                                break;
+                            case "5":
+                                tiendaPruebas=false;
+                        }
+                    }
                     break;
                 case "q":
                     interfaz.mostrarMensaje(InterfazConsola.AZUL+"volviendo al menu"+InterfazConsola.RESET);
