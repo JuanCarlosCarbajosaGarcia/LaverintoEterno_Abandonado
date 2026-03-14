@@ -147,6 +147,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 interfaz.mostrarMensaje("El minotauro a muerto");
                 enemigo.setX(mapa.length+1);
                 enemigo.setY(mapa.length+1);
+                mostrarMapa();
             }
         }
     }
@@ -191,9 +192,10 @@ public class Laverinto implements ILaberinto, IJuego{
                 int newY = rand.nextInt(Tamanoy);
 
                 int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+                int entrada = mapa[0][1];
 
                 //verificar la posicion
-                if (mapa[newX][newY] != '#' && distancia >= 5) {
+                if (mapa[newX][newY] != '#' && distancia >= 5 && entrada!=distancia) {
                     enemigo.setX(newX);
                     enemigo.setY(newY);
                     posicionValida = true;
