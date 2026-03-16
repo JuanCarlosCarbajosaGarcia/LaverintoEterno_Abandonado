@@ -61,7 +61,20 @@ public class Laverinto implements ILaberinto, IJuego{
             return;
         }
 
-        enemigo = new Enemigo("Minos","enemigo",100,10,Tamanox/2,Tamanoy/2);
+        int vid = 100;
+        int dan = 10;
+
+        int muertesvid;
+        int muertesdan;
+
+        if (enemigo.muertes>=1){
+            muertesvid = (enemigo.muertes * vid) + (vid / 2);
+            muertesdan = (enemigo.muertes * dan) + (dan / 2);
+        }else {
+            muertesvid = vid + (vid / 2);
+            muertesdan = dan + (dan / 2);
+        }
+        enemigo = new Enemigo("Minos", "enemigo", muertesvid, muertesdan, Tamanox / 2, Tamanoy / 2);
         colocarEnemigos();
         enemigo.estaVivo();
 
@@ -147,6 +160,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 interfaz.mostrarMensaje("El minotauro a muerto");
                 enemigo.setX(mapa.length+1);
                 enemigo.setY(mapa.length+1);
+                enemigo.setMuertes(enemigo.muertes+1);
                 mostrarMapa();
             }
         }
@@ -163,26 +177,9 @@ public class Laverinto implements ILaberinto, IJuego{
     }
 
     private void separar(){
-    int[] dx = {-2, 0, 2, 0};
-    int[] dy = {0, 2, 0, -2};
-
-        //buscar celda valida
-        for (int s = 0; s < 4; s++) {
-            int newX = jugador.getX() + dx[s];
-            int newY = jugador.getY() + dy[s];
-
-            //verificar nueva posicion
-            if (newX >= 0 && newX < Tamanox && newY >= 0 && newY < Tamanoy && mapa[newX][newY] != '#' && (newX != enemigo.getX() || newY != enemigo.getY())) {
-
-                jugador.setX(newX);
-                jugador.setY(newY);
+                jugador.setX(0);
+                jugador.setY(1);
                 mostrarMapa();
-                return;
-            }
-        }
-
-        //si no puede moverse
-        interfaz.mostrarError("¡No puedes moverte! Estas atrapado.");
     }
 
     private void colocarEnemigos(){

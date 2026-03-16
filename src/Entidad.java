@@ -6,6 +6,7 @@ public class Entidad implements IEntidad {
     protected int vidaMax;
     protected int dano;
     protected int oro;
+    protected int muertes;
 
     public Entidad(String nombre, String tipo, int vida, int dano) {
         this.nombre = nombre;
@@ -14,6 +15,7 @@ public class Entidad implements IEntidad {
         this.vidaMax = vida;
         this.dano = dano;
         this.oro = 0;
+        this.muertes = 0;
     }
 
     //implementar interfaz
@@ -82,5 +84,13 @@ public class Entidad implements IEntidad {
     public String toString() {
         return String.format("%s (%s) - Vida: %d/%d, Daño: %d, Oro: %d",
                 nombre, tipo, vida, vidaMax, dano, oro);
+    }
+
+    public int getMuertes() {
+        return muertes;
+    }
+
+    public void setMuertes(int muertes) {
+        this.muertes = muertes;
     }
 }
