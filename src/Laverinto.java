@@ -61,22 +61,9 @@ public class Laverinto implements ILaberinto, IJuego{
             return;
         }
 
-        int vid = 100;
-        int dan = 10;
 
-        int muertesvid;
-        int muertesdan;
-
-        if (enemigo.muertes>=1){
-            muertesvid = (enemigo.muertes * vid) + (vid / 2);
-            muertesdan = (enemigo.muertes * dan) + (dan / 2);
-        }else {
-            muertesvid = vid + (vid / 2);
-            muertesdan = dan + (dan / 2);
-        }
-        enemigo = new Enemigo("Minos", "enemigo", muertesvid, muertesdan, Tamanox / 2, Tamanoy / 2);
+        enemigo = new Enemigo("nombre", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
         colocarEnemigos();
-        enemigo.estaVivo();
 
         //resetear jugador
         jugador.setX(0);
@@ -160,7 +147,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 interfaz.mostrarMensaje("El minotauro a muerto");
                 enemigo.setX(mapa.length+1);
                 enemigo.setY(mapa.length+1);
-                enemigo.setMuertes(enemigo.muertes+1);
+                enemigo.setMuertes(Entidad.muertes +1);
                 mostrarMapa();
             }
         }
@@ -185,6 +172,23 @@ public class Laverinto implements ILaberinto, IJuego{
     private void colocarEnemigos(){
             boolean posicionValida = false;
             while (!posicionValida) {
+
+                int vid = 100;
+                int dan = 10;
+
+                int muertesvid;
+                int muertesdan;
+
+                if (Entidad.muertes >=1){
+                    muertesvid = (Entidad.muertes * vid) + (vid / 2);
+                    muertesdan = (Entidad.muertes * dan) + (dan / 2);
+                }else {
+                    muertesvid = vid + (vid / 2);
+                    muertesdan = dan + (dan / 2);
+                }
+                enemigo = new Enemigo("Minos", "enemigo", muertesvid, muertesdan, Tamanox / 2, Tamanoy / 2);
+                enemigo.estaVivo();
+
                 int newX = rand.nextInt(Tamanox);
                 int newY = rand.nextInt(Tamanoy);
 

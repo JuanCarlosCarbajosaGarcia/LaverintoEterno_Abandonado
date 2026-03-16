@@ -1,8 +1,9 @@
 import java.util.Scanner;
 
-public class Jugador extends Entidad {
+public class Jugador extends Entidad{
     private int x,y;
     private Scanner scanner;
+    private boolean menuD=false;
 
     public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
@@ -27,14 +28,31 @@ public class Jugador extends Entidad {
                 break; //izquierda
             case "d": newY++;
                 break; //derecha
+            case "p": //abrir menu desarrollo
+                menuD=true;
+                while(menuD) {
+                    System.out.println("menu");
+                    System.out.println("1: tienda");
+                    System.out.println("2: reiniciar");
+                    System.out.println("3: salir");
+                    int menud = scanner.nextInt();
+                    switch (menud) {
+                        case 1:
+                            Vendedor vendedor = new Vendedor(1);
+                            boolean volver = vendedor.mostrarTienda(this);
+                            if (volver) return true;
+                            break;
+                        case 2:
+                            new Laverinto();
+                            break;
+                        case 3:
+                            menuD = false;
+                    }
+                }
+                break;
             case "q": //volver al menu
                 System.out.println("volviendo al menu");
                 return true;
-            case "p": //abrir tienda
-                Vendedor vendedor = new Vendedor(1);
-                boolean volver = vendedor.mostrarTienda(this);
-                if(volver)return true;
-                break;
             default: System.out.println("movimiento invalido");
                 return false;
         }

@@ -146,7 +146,6 @@ public class Vendedor implements IVendedor{
                 case "q":
                     interfaz.mostrarMensaje(InterfazConsola.AZUL+"volviendo al menu"+InterfazConsola.RESET);
                     return true;
-
                 default:
                     interfaz.mostrarMensaje(InterfazConsola.ROJO+"operacion invalida"+InterfazConsola.RESET);
             }
