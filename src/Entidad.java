@@ -6,7 +6,7 @@ public class Entidad implements IEntidad {
     protected int vidaMax;
     protected int dano;
     protected int oro;
-    protected static int muertes;
+    protected int muertes;
 
     public Entidad(String nombre, String tipo, int vida, int dano) {
         this.nombre = nombre;
@@ -15,10 +15,17 @@ public class Entidad implements IEntidad {
         this.vidaMax = vida;
         this.dano = dano;
         this.oro = 0;
-        muertes = 0;
+        this.muertes = 0;
     }
 
     //implementar interfaz
+    public int getMuertes() {
+        return muertes;
+    }
+
+    public void setMuertes(int muertes) {
+        this.muertes = muertes;
+    }
     @Override
     public String getNombre() {
         return nombre;
@@ -42,6 +49,26 @@ public class Entidad implements IEntidad {
     @Override
     public int getDano() {
         return dano;
+    }
+
+    public void setDano(int dano) {
+        this.dano = dano;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setVidaMax(int vidaMax) {
+        this.vidaMax = vidaMax;
     }
 
     @Override
@@ -86,11 +113,8 @@ public class Entidad implements IEntidad {
                 nombre, tipo, vida, vidaMax, dano, oro);
     }
 
-    public int getMuertes() {
-        return muertes;
-    }
-
-    public void setMuertes(int muertes) {
-        Entidad.muertes = muertes;
+    @Override
+    public void aumentarMuertes(int muerte){
+        this.muertes += muerte;
     }
 }

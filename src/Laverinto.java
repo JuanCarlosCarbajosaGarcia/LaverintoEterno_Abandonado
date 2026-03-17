@@ -35,6 +35,9 @@ public class Laverinto implements ILaberinto, IJuego{
         jugador.setOro(0);
         jugador.estaVivo();
 
+        //iniciar enemigo
+        enemigo = new Enemigo("nombre", "enemigo", 1, 1, Tamanox / 2, Tamanoy / 2);
+
         //bucle de juego
         while(juego){
             iniciarNivel();
@@ -62,7 +65,6 @@ public class Laverinto implements ILaberinto, IJuego{
         }
 
 
-        enemigo = new Enemigo("nombre", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
         colocarEnemigos();
 
         //resetear jugador
@@ -119,6 +121,10 @@ public class Laverinto implements ILaberinto, IJuego{
                     //jugador sobrevive
                     interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
                     interfaz.mostrarExito("has escapado con vida.");
+                    if (!enemigo.estaVivo()){
+                        enemigo.aumentarMuertes(1);
+                        interfaz.mostrarMensaje("El minotauro a muerto");
+                    }
                     separar();
                 } else {
                     //jugador muere
@@ -144,11 +150,8 @@ public class Laverinto implements ILaberinto, IJuego{
                 enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
             }else {
                 //minos muere
-                interfaz.mostrarMensaje("El minotauro a muerto");
                 enemigo.setX(mapa.length+1);
                 enemigo.setY(mapa.length+1);
-                enemigo.setMuertes(Entidad.muertes +1);
-                mostrarMapa();
             }
         }
     }
@@ -179,12 +182,17 @@ public class Laverinto implements ILaberinto, IJuego{
                 int muertesvid;
                 int muertesdan;
 
-                if (Entidad.muertes >=1){
-                    muertesvid = (Entidad.muertes * vid) + (vid / 2);
-                    muertesdan = (Entidad.muertes * dan) + (dan / 2);
-                }else {
+
+                if (enemigo.muertes ==0){
                     muertesvid = vid + (vid / 2);
+                    enemigo.setVida(muertesvid);
                     muertesdan = dan + (dan / 2);
+                    enemigo.setDano(muertesdan);
+                }else {
+                    muertesvid = (enemigo.muertes * vid) + (vid / 2);
+                    enemigo.setVida(muertesvid);
+                    muertesdan = (enemigo.muertes * dan) + (dan / 2);
+                    enemigo.setDano(muertesdan);
                 }
                 enemigo = new Enemigo("Minos", "enemigo", muertesvid, muertesdan, Tamanox / 2, Tamanoy / 2);
                 enemigo.estaVivo();
@@ -196,7 +204,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 int entrada = mapa[0][1];
 
                 //verificar la posicion
-                if (mapa[newX][newY] != '#' && distancia >= 5 && entrada!=distancia) {
+                if (mapa[newX][newY] != '#' && distancia >= 5 && mapa[newX][newY] != entrada) {
                     enemigo.setX(newX);
                     enemigo.setY(newY);
                     posicionValida = true;

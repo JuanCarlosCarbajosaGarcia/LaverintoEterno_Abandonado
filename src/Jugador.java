@@ -3,7 +3,6 @@ import java.util.Scanner;
 public class Jugador extends Entidad{
     private int x,y;
     private Scanner scanner;
-    private boolean menuD=false;
 
     public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
@@ -29,12 +28,11 @@ public class Jugador extends Entidad{
             case "d": newY++;
                 break; //derecha
             case "p": //abrir menu desarrollo
-                menuD=true;
+                boolean menuD = true;
                 while(menuD) {
                     System.out.println("menu");
                     System.out.println("1: tienda");
-                    System.out.println("2: reiniciar");
-                    System.out.println("3: salir");
+                    System.out.println("2: volver al juego");
                     int menud = scanner.nextInt();
                     switch (menud) {
                         case 1:
@@ -43,15 +41,12 @@ public class Jugador extends Entidad{
                             if (volver) return true;
                             break;
                         case 2:
-                            new Laverinto();
-                            break;
-                        case 3:
                             menuD = false;
+                            break;
                     }
                 }
                 break;
             case "q": //volver al menu
-                System.out.println("volviendo al menu");
                 return true;
             default: System.out.println("movimiento invalido");
                 return false;

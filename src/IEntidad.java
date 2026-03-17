@@ -12,4 +12,5 @@ public interface IEntidad {
     void aumentarVidaMax(int cantidad);
     void subirDano(int cantidad);
     void restarOro(int cantidad);
+    void aumentarMuertes(int muerte);
 }
