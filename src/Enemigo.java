@@ -11,6 +11,7 @@ public class Enemigo extends Entidad{
 
         this.x=starX;
         this.y=starY;
+        this.vidaMax=vida;
     }
 
     public void mover(char[][] mapa, Random rand, int maxX, int maxY){

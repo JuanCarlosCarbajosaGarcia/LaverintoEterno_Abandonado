@@ -25,6 +25,8 @@ public class Laverinto implements ILaberinto, IJuego{
         //nombre del jugador
         String nombre = interfaz.pedirLinea("ingrese el nombre del jugador: ");
 
+        enemigo = new Enemigo("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+
         if (nombre == null||nombre.trim().isEmpty()){
             //referencia a libro
             nombre = "Maze_Runer";
@@ -33,7 +35,6 @@ public class Laverinto implements ILaberinto, IJuego{
         //iniciar el jugador
         jugador = new Jugador(nombre,"jugador",10,10,0,1);
         jugador.setOro(0);
-        jugador.estaVivo();
 
         //iniciar enemigo
         minotauro();
@@ -102,6 +103,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
 
                 nivelActivo = false;
+                enemigo.curar();
                 continue;
             }
 
@@ -140,14 +142,14 @@ public class Laverinto implements ILaberinto, IJuego{
                 juego = false;
                 return;
             }
-
-            if (enemigo.estaVivo()){
-                //minos vive
-                enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
-            }else {
+            if (enemigo.vida==0){
                 //minos muere
+                minotauro();
                 enemigo.setX(mapa.length+1);
                 enemigo.setY(mapa.length+1);
+            }else {
+                //minos vive
+                enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
             }
         }
     }
@@ -320,7 +322,7 @@ public class Laverinto implements ILaberinto, IJuego{
     }
 
     private void guardarMapa(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("Mapa.txt", !primerJuego))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(jugador.nombre+"Mapa.txt", !primerJuego))){
             //encabezado del archivo
             if(primerJuego){
                writer.write("=== Laberinto de " + jugador.nombre + " ===");
@@ -364,20 +366,17 @@ public class Laverinto implements ILaberinto, IJuego{
         int muertesvid;
         int muertesdan;
 
-
-        if (enemigo.muertes <=1){
+        if (enemigo.muertes <= 1) {
             muertesvid = vid + (vid / 2);
             enemigo.setVida(muertesvid);
             muertesdan = dan + (dan / 2);
             enemigo.setDano(muertesdan);
-        }else {
+        } else {
             muertesvid = (enemigo.muertes * vid) + (vid / 2);
             enemigo.setVida(muertesvid);
             muertesdan = (enemigo.muertes * dan) + (dan / 2);
             enemigo.setDano(muertesdan);
         }
-        enemigo.estaVivo();
-        enemigo = new Enemigo("Minos", "enemigo", muertesvid, muertesdan, Tamanox / 2, Tamanoy / 2);
         if (!enemigo.estaVivo()){
             enemigo.aumentarMuertes(1);
             interfaz.mostrarMensaje("El minotauro a muerto");
