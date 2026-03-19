@@ -1,4 +1,4 @@
-static Scanner sc = new Scanner(System.in);
+static Scanner mainsc = new Scanner(System.in);
 static boolean juegoA = true;
 static IInterfaz interfaz = new InterfazConsola();
 
@@ -12,8 +12,8 @@ static void mostrarMenu() {
         interfaz.mostrarMenu();
 
         try{
-            int opcion = sc.nextInt();
-            sc.nextLine();
+            int opcion = mainsc.nextInt();
+            mainsc.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -32,7 +32,7 @@ static void mostrarMenu() {
             }
         }catch (Exception e){
             interfaz.mostrarError("introduce una opcion valida");
-            sc.nextLine();
+            mainsc.nextLine();
         }
     }
 }

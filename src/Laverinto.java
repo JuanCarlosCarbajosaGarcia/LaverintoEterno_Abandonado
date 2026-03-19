@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto implements ILaberinto, IJuego{
-    private static final int Tamanox = 5;
-    private static final int Tamanoy = 5;
+    private static final int Tamanox = 10;
+    private static final int Tamanoy = 20;
     private static final int Max_intentos = 100;
 
     private final char[][] mapa = new char[Tamanox][Tamanoy];
     private final Random rand = new Random(System.currentTimeMillis());
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner laverintosc = new Scanner(System.in);
 
     private final IInterfaz interfaz = new InterfazConsola();
 
@@ -19,7 +19,6 @@ public class Laverinto implements ILaberinto, IJuego{
     private int nivel = 1;
     private boolean juego = true;
     private boolean primerJuego = true;
-    boolean minos;
 
     public Laverinto(){
         interfaz.mostrarMensaje("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
@@ -124,35 +123,35 @@ public class Laverinto implements ILaberinto, IJuego{
                     interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
                     interfaz.mostrarExito("has escapado con vida.");
                     separar();
-                    if (enemigo.vida == 0) {
-                        //minos muere
-                        enemigo.aumentarMuertes(1);
-                        interfaz.mostrarMensaje("El minotauro a muerto");
-                        dificultad();
-                        enemigo.setX(mapa.length + 1);
-                        enemigo.setY(mapa.length + 1);
-                        minos = false;
-                    } else {
-                        //jugador muere
-                        interfaz.mostrarError("el minotauro te ha devorado");
-                        interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                        interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
-                        guardarMapa();
-                        juego = false;
-                        return;
-                    }
-                }
-
-                //movimiento jugador
-                boolean salirJuego = jugador.mover(mapa, scanner);
-                if (salirJuego) {
-                    interfaz.mostrarMensaje("volviendo al menu principal.....");
+                } else {
+                    //jugador muere
+                    interfaz.mostrarError("el minotauro te ha devorado");
+                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
+                    guardarMapa();
                     juego = false;
                     return;
                 }
-                //movimiento de minos
-                enemigo.mover(mapa, rand, mapa.length, mapa[0].length);//movimiento Minos
+
+                if (enemigo.getVida() == 0) {
+                    //minos muere
+                    enemigo.aumentarMuertes(1);
+                    interfaz.mostrarMensaje("El minotauro a muerto");
+                    dificultad();
+                    enemigo.setX(mapa.length + 1);
+                    enemigo.setY(mapa.length + 1);
+                }
             }
+            //movimiento jugador
+            boolean salirJuego = jugador.mover(mapa, laverintosc);
+            if (salirJuego) {
+                interfaz.mostrarMensaje("volviendo al menu principal.....");
+                juego = false;
+                return;
+            }
+
+            //movimiento Minos
+            enemigo.mover(mapa, rand, mapa.length, mapa[0].length);
         }
     }
     @Override
@@ -363,24 +362,23 @@ public class Laverinto implements ILaberinto, IJuego{
     private void minotauro(){
         //enemigo
         enemigo = new Enemigo("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
-        minos=true;
     }
     private void dificultad(){
-        int vid = 100;
+        int vid = 150;
         int dan = 10;
 
         int muertesvid;
         int muertesdan;
 
         if (enemigo.muertes <= 1) {
-            muertesvid = vid + (vid / 2);
+            muertesvid = vid;
             enemigo.setVida(muertesvid);
-            muertesdan = dan + (dan / 2);
+            muertesdan = dan;
             enemigo.setDano(muertesdan);
         } else {
-            muertesvid = (enemigo.muertes * vid) + (vid / 2);
+            muertesvid = enemigo.muertes * vid;
             enemigo.setVida(muertesvid);
-            muertesdan = (enemigo.muertes * dan) + (dan / 2);
+            muertesdan = enemigo.muertes * dan;
             enemigo.setDano(muertesdan);
         }
     }

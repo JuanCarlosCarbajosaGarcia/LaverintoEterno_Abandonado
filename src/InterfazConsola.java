@@ -16,7 +16,7 @@ public class InterfazConsola implements IInterfaz{
     public static final String ROJO_CLARO = "\u001B[91m";
     public static final String VERDE_CLARO = "\u001B[92m";
 
-    private final Scanner sc = new Scanner(System.in);
+    private final Scanner interfacsc = new Scanner(System.in);
 
     @Override
     public void limpiarPantalla() {
@@ -60,7 +60,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println(RESET);
 
         System.out.println("\n" + AMARILLO + NEGRITA + " Presiona ENTER para continuar" + RESET);
-        sc.nextLine();
+        interfacsc.nextLine();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class InterfazConsola implements IInterfaz{
     @Override
     public String pedirLinea(String mensaje) {
         System.out.println(VERDE_CLARO + mensaje + RESET);
-        return sc.nextLine();
+        return interfacsc.nextLine();
     }
 
     @Override
@@ -147,9 +147,9 @@ public class InterfazConsola implements IInterfaz{
         while(true){
             try{
                 System.out.println(VERDE_CLARO + mensaje + RESET);
-                return sc.nextInt();
+                return interfacsc.nextInt();
             }catch (Exception e){
-                sc.nextLine();
+                interfacsc.nextLine();
                 mostrarError("por favor ingrese un numero valido" + e.getMessage());
             }
         }

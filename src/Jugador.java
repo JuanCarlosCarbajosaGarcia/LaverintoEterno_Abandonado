@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Jugador extends Entidad{
     private int x,y;
-    private Scanner scanner;
+    private Scanner jugadorsc;
 
     public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
@@ -10,7 +10,7 @@ public class Jugador extends Entidad{
 
         this.x = starX;
         this.y = starY;
-        this.scanner = new Scanner(System.in);
+        this.jugadorsc = new Scanner(System.in);
     }
 
     public boolean mover(char[][] mapa, Scanner sc){
@@ -28,21 +28,23 @@ public class Jugador extends Entidad{
             case "d": newY++;
                 break; //derecha
             case "p": //abrir menu desarrollo
-                boolean menuD = true;
-                while(menuD) {
+                boolean menuDes = true;
+                while(menuDes) {
                     System.out.println("menu");
                     System.out.println("1: tienda");
                     System.out.println("2: volver al juego");
-                    int menud = scanner.nextInt();
-                    switch (menud) {
+                    int menudes = jugadorsc.nextInt();
+                    switch (menudes) {
                         case 1:
                             Vendedor vendedor = new Vendedor(1);
                             boolean volver = vendedor.mostrarTienda(this);
                             if (volver) return true;
                             break;
                         case 2:
-                            menuD = false;
+                            menuDes = false;
                             break;
+                        default: System.out.println("movimiento invalido");
+                            return false;
                     }
                 }
                 break;

@@ -4,14 +4,14 @@ import java.util.Scanner;
 public class Vendedor implements IVendedor{
     private final IInterfaz interfaz = new InterfazConsola();
 
-    private final Scanner oro = new Scanner(System.in);
+    private final Scanner dinerosc = new Scanner(System.in);
     private final int nivelActual;
     Random num = new Random();
     int vid = num.nextInt(10) +1;
     boolean armadura = true;
     boolean arma = true;
     boolean tiendaPruebas=false;
-    private final Scanner sc = new Scanner(System.in);
+    private final Scanner vendedorsc = new Scanner(System.in);
 
     public Vendedor(int nivel){
         this.nivelActual=nivel -1;
@@ -50,7 +50,7 @@ public class Vendedor implements IVendedor{
             interfaz.mostrarMensaje(InterfazConsola.AZUL+"Q. salir del juego"+InterfazConsola.RESET);
             interfaz.mostrarMensaje("que quieres hacer: ");
 
-            String opcion = oro.nextLine().toLowerCase();
+            String opcion = dinerosc.nextLine().toLowerCase();
 
             switch (opcion){
                 case "1":
@@ -116,22 +116,22 @@ public class Vendedor implements IVendedor{
                         interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "4: curar" + InterfazConsola.RESET);
                         interfaz.mostrarMensaje(InterfazConsola.MAGENTA + "5: Salir" + InterfazConsola.RESET);
 
-                        String Pruebas = oro.nextLine().toLowerCase();
+                        String Pruebas = dinerosc.nextLine().toLowerCase();
 
                         switch (Pruebas) {
                             case "1":
                                 interfaz.mostrarMensaje("cantidad de oro:");
-                                jugador.setOro(sc.nextInt());
+                                jugador.setOro(vendedorsc.nextInt());
                                 interfaz.mostrarMensaje("oro puesto a: " + jugador.getOro());
                                 break;
                             case "2":
                                 interfaz.mostrarMensaje("cantidad de daño:");
-                                jugador.subirDano(sc.nextInt());
+                                jugador.subirDano(vendedorsc.nextInt());
                                 interfaz.mostrarMensaje("daño aumentado: " + jugador.getDano());
                                 break;
                             case "3":
                                 interfaz.mostrarMensaje("cantidad de armadura:");
-                                jugador.aumentarVidaMax(sc.nextInt());
+                                jugador.aumentarVidaMax(vendedorsc.nextInt());
                                 interfaz.mostrarMensaje("armadura aumentada: " + jugador.getVidaMax());
                                 break;
                             case "4":
