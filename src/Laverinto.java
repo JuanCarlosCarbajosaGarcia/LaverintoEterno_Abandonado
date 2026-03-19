@@ -19,13 +19,13 @@ public class Laverinto implements ILaberinto, IJuego{
     private int nivel = 1;
     private boolean juego = true;
     private boolean primerJuego = true;
+    boolean minos;
 
     public Laverinto(){
         interfaz.mostrarMensaje("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
         //nombre del jugador
         String nombre = interfaz.pedirLinea("ingrese el nombre del jugador: ");
 
-        enemigo = new Enemigo("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
 
         if (nombre == null||nombre.trim().isEmpty()){
             //referencia a libro
@@ -46,7 +46,7 @@ public class Laverinto implements ILaberinto, IJuego{
     }
 
     @Override
-    public void iniciarNivel(){
+    public void iniciarNivel() {
         interfaz.mostrarMensaje("\n=== INICIANDO NIVEL " + nivel + " ===");
 
         //generar laverinto
@@ -58,9 +58,9 @@ public class Laverinto implements ILaberinto, IJuego{
             posible = esPosible();
             intentos++;
 
-        } while(!posible && intentos <Max_intentos);
+        } while (!posible && intentos < Max_intentos);
 
-        if (!posible){
+        if (!posible) {
             interfaz.mostrarError("no se pudo generar el nivel");
             return;
         }
@@ -75,20 +75,20 @@ public class Laverinto implements ILaberinto, IJuego{
         //bucle del nivel
         boolean nivelActivo = true;
 
-        while (nivelActivo && juego){
+        while (nivelActivo && juego) {
             interfaz.limpiarPantalla();
 
             mostrarMapa();
-            interfaz.mostrarInfo(nivel,jugador.getVida(),jugador.getVidaMax(),jugador.getOro(),jugador.getDano());
+            interfaz.mostrarInfo(nivel, jugador.getVida(), jugador.getVidaMax(), jugador.getOro(), jugador.getDano());
 
             //termino el nivel el jugador
-            if (mapa[jugador.getX()][jugador.getY()] == 'S'){
+            if (mapa[jugador.getX()][jugador.getY()] == 'S') {
                 interfaz.mostrarExito("¡Felicidades! Sobreviviste el nivel " + nivel);
                 nivel++;
                 Random num = new Random();
-                int premio = num.nextInt(5)+1;
+                int premio = num.nextInt(5) + 1;
                 jugador.setOro(jugador.getOro() + premio);
-                interfaz.mostrarMensaje(InterfazConsola.AMARILLO+"Ganaste: " + premio + " de Oro"+InterfazConsola.RESET);
+                interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "Ganaste: " + premio + " de Oro" + InterfazConsola.RESET);
 
                 guardarMapa();
 
@@ -96,7 +96,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 Vendedor vendedor = new Vendedor(nivel);
                 boolean volveraMenu = vendedor.mostrarTienda(jugador);
 
-                if (volveraMenu){
+                if (volveraMenu) {
                     interfaz.mostrarMensaje("voviendo al menu principal");
                     juego = false;
                     return;
@@ -108,7 +108,7 @@ public class Laverinto implements ILaberinto, IJuego{
             }
 
             //ataque de enemigo
-            if (jugador.getX()==enemigo.getX() && jugador.getY()==enemigo.getY()){
+            if (jugador.getX() == enemigo.getX() && jugador.getY() == enemigo.getY()) {
                 interfaz.mostrarMensaje("El Minotauro te a atacado");
 
                 int danoRecibido = enemigo.getDano();
@@ -124,36 +124,37 @@ public class Laverinto implements ILaberinto, IJuego{
                     interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
                     interfaz.mostrarExito("has escapado con vida.");
                     separar();
-                } else {
-                    //jugador muere
-                    interfaz.mostrarError("el minotauro te ha devorado");
-                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO+"oro total: " + jugador.getOro()+InterfazConsola.RESET);
-                    guardarMapa();
+                    if (enemigo.vida == 0) {
+                        //minos muere
+                        enemigo.aumentarMuertes(1);
+                        interfaz.mostrarMensaje("El minotauro a muerto");
+                        dificultad();
+                        enemigo.setX(mapa.length + 1);
+                        enemigo.setY(mapa.length + 1);
+                        minos = false;
+                    } else {
+                        //jugador muere
+                        interfaz.mostrarError("el minotauro te ha devorado");
+                        interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                        interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
+                        guardarMapa();
+                        juego = false;
+                        return;
+                    }
+                }
+
+                //movimiento jugador
+                boolean salirJuego = jugador.mover(mapa, scanner);
+                if (salirJuego) {
+                    interfaz.mostrarMensaje("volviendo al menu principal.....");
                     juego = false;
                     return;
                 }
-            }
-
-            //movimiento jugador
-            boolean salirJuego=jugador.mover(mapa,scanner);
-            if (salirJuego){
-                interfaz.mostrarMensaje("volviendo al menu principal.....");
-                juego = false;
-                return;
-            }
-            if (enemigo.vida==0){
-                //minos muere
-                minotauro();
-                enemigo.setX(mapa.length+1);
-                enemigo.setY(mapa.length+1);
-            }else {
-                //minos vive
-                enemigo.mover(mapa,rand, mapa.length, mapa[0].length);//movimiento Minos
+                //movimiento de minos
+                enemigo.mover(mapa, rand, mapa.length, mapa[0].length);//movimiento Minos
             }
         }
     }
-
     @Override
     public boolean estaActivo() {
         return juego;
@@ -360,6 +361,11 @@ public class Laverinto implements ILaberinto, IJuego{
         }
     }
     private void minotauro(){
+        //enemigo
+        enemigo = new Enemigo("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+        minos=true;
+    }
+    private void dificultad(){
         int vid = 100;
         int dan = 10;
 
@@ -376,10 +382,6 @@ public class Laverinto implements ILaberinto, IJuego{
             enemigo.setVida(muertesvid);
             muertesdan = (enemigo.muertes * dan) + (dan / 2);
             enemigo.setDano(muertesdan);
-        }
-        if (!enemigo.estaVivo()){
-            enemigo.aumentarMuertes(1);
-            interfaz.mostrarMensaje("El minotauro a muerto");
         }
     }
 }
