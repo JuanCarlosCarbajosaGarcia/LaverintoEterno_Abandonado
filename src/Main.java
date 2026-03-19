@@ -28,9 +28,10 @@ static void mostrarMenu() {
                     break;
                 default:
                     interfaz.mostrarError("opcion invalida");
+                    interfaz.mostrarMenu();
             }
         }catch (Exception e){
-            interfaz.mostrarError("introduce un numero");
+            interfaz.mostrarError("introduce una opcion valida");
             sc.nextLine();
         }
     }
