@@ -322,7 +322,7 @@ public class Laverinto implements ILaberinto, IJuego{
     }
 
     private void guardarMapa(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(jugador.nombre+"Mapa.txt", !primerJuego))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(jugador.nombre+"_Mapa.txt", !primerJuego))){
             //encabezado del archivo
             if(primerJuego){
                writer.write("=== Laberinto de " + jugador.nombre + " ===");
