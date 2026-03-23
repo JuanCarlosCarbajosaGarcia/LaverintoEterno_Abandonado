@@ -16,6 +16,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
     private final Jugador jugador;
     private Enemigo enemigo;
+    private Tesoro tesoro;
     private int nivel = 1;
     private boolean juego = true;
     private boolean primerJuego = true;
@@ -66,6 +67,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
 
         colocarEnemigos();
+        Cofres();
 
         //resetear jugador
         jugador.setX(0);
@@ -141,6 +143,15 @@ public class Laverinto implements ILaberinto, IJuego{
                     enemigo.setX(mapa.length + 1);
                     enemigo.setY(mapa.length + 1);
                 }
+            }
+            if (jugador.getX() == tesoro.getX() && jugador.getY() == tesoro.getY()) {
+                interfaz.mostrarMensaje("Has encontrado un cofre");
+                Random num = new Random();
+                int premio = num.nextInt(10) + 1;
+                jugador.setOro(jugador.getOro() + premio);
+                tesoro.setX(mapa.length + 1);
+                tesoro.setY(mapa.length + 1);
+                interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "Encontraste: " + premio + " de Oro" + InterfazConsola.RESET);
             }
             //movimiento jugador
             boolean salirJuego = jugador.mover(mapa, laverintosc);
@@ -293,6 +304,8 @@ public class Laverinto implements ILaberinto, IJuego{
                     System.out.print(InterfazConsola.VERDE_CLARO+'S'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='#') {
                     System.out.print(InterfazConsola.GRIS+'#'+InterfazConsola.RESET);
+                } else if (i == tesoro.getX() && j == tesoro.getY()) {
+                    System.out.print(InterfazConsola.AMARILLO+'C'+InterfazConsola.RESET);
                 } else {
                     System.out.print(mapa[i][j]);
                 }
@@ -380,6 +393,30 @@ public class Laverinto implements ILaberinto, IJuego{
             enemigo.setVida(muertesvid);
             muertesdan = enemigo.muertes * dan;
             enemigo.setDano(muertesdan);
+        }
+    }
+    private void Cofres() {
+        tesoro = new Tesoro("cofre", "Tesoro", 1, 0, Tamanox / 2, Tamanoy / 2);
+        boolean CofreValido = false;
+        int numcofres = rand.nextInt(10)+1;
+        int cofres = 0;
+        while (cofres<numcofres) {
+            while (!CofreValido) {
+
+                int newX = rand.nextInt(Tamanox);
+                int newY = rand.nextInt(Tamanoy);
+
+                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+                int entrada = mapa[0][1];
+
+                //verificar la posicion
+                if (mapa[newX][newY] != '#' && distancia >= 5 && mapa[newX][newY] != entrada) {
+                    tesoro.setX(newX);
+                    tesoro.setY(newY);
+                    CofreValido = true;
+                }
+            }
+            cofres++;
         }
     }
 }
