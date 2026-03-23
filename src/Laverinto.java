@@ -20,8 +20,8 @@ public class Laverinto implements ILaberinto, IJuego{
     private boolean juego = true;
     private boolean primerJuego = true;
     private final List<Tesoro> tesoros = new ArrayList<>();
-    private static final int minpasos = 15;
-    private static final int maxpasos = 50;
+    private static final int minpasos = 1;
+    private static final int maxpasos = 9999;
 
     public Laverinto(){
         interfaz.mostrarMensaje("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
@@ -219,11 +219,54 @@ public class Laverinto implements ILaberinto, IJuego{
         mapaF();
     }
 
+
     public void mapaB() {
         for (int i = 0; i < Tamanox; i++) {
             Arrays.fill(mapa[i], '#');
         }
         caminoP();
+
+        camino(1,1);
+
+        //poner los bordes
+        for (int i = 0; i < Tamanox; i++){
+            mapa[i][Tamanoy-1] = '#';
+        }
+        for (int j = 0; j < Tamanoy; j++){
+            mapa[Tamanox-1][j] = '#';
+        }
+        mapa[0][1] = 'E'; //entrada
+        mapa[Tamanox - 1][1]= 'S'; //salida
+    }
+
+    //generar el camino
+    private void camino(int x, int y){
+        mapa[x][y]=' ';
+        int[] direccion = {0,1,2,3};
+        shuffleArray(direccion);
+
+        for(int dir: direccion){
+            int nx = x,  ny = y;
+            switch (dir){
+                case 0: nx -= 2;
+                    break; // Arriba
+
+                case 1: ny += 2;
+                    break; // Derecha
+
+                case 2: nx += 2;
+                    break; // Abajo
+
+                case 3: ny -= 2;
+                    break; // Izquierda
+            }
+            //verificar que los limites sean pared
+            if (nx >0 && nx < Tamanox && ny > 0 && ny < Tamanoy && mapa[nx][ny]=='#'){
+                mapa[nx][ny] = ' '; //quitar pared
+                mapa[x + (nx-x)/2][y + (ny-y)/2]=' ';
+                camino(nx,ny);
+            }
+        }
     }
 
     //generar el camino
@@ -280,16 +323,15 @@ public class Laverinto implements ILaberinto, IJuego{
         Set<String> celVisi = new HashSet<>();
         for (int i = 1; i < Tamanox-2; i++) {
                 if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
-                    if (rand.nextDouble() < 0.6){
-                        int dir = rand.nextBoolean() ? 1 : 3;
-                        caminoR(i,1,dir,celVisi);
+                    if (rand.nextDouble() < 0.8){
+                        caminoR(i,1,celVisi);
                     }
                 }
         }
     }
 
     private void caminoR(int x, int y, Set<String> Visi){
-        if (Visi.size() > 30) {
+        if (Visi.size() > 10) {
             return;
         }
         Visi.add(x+","+y);
@@ -354,6 +396,7 @@ public class Laverinto implements ILaberinto, IJuego{
             int size = cola.size();
             for (int i = 0; i < size; i++) {
                 int[] actual = cola.poll();
+                assert actual != null;
                 int x = actual[0], y = actual[1];
 
                 if (x==Tamanox-1 && y==1){
