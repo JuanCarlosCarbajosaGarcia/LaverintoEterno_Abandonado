@@ -64,7 +64,7 @@ public class Laverinto implements ILaberinto, IJuego{
         } while (!posible && intentos < Max_intentos);
 
         if (!posible) {
-            interfaz.mostrarError("no se pudo generar el nivel");
+            caminosE();
             return;
         }
 
@@ -150,6 +150,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     enemigo.setY(mapa.length + 1);
                 }
             }
+            //encontrar cofre
             Iterator<Tesoro> itcofre = tesoros.iterator();
             while (itcofre.hasNext()) {
                 Tesoro tesoro = itcofre.next();
@@ -214,7 +215,7 @@ public class Laverinto implements ILaberinto, IJuego{
     //generar el mapa
     public void generarMapa(){
         mapaB();
-        caminoD();
+        //caminoD();
         complejo();
         mapaF();
     }
@@ -285,38 +286,11 @@ public class Laverinto implements ILaberinto, IJuego{
         mapa[Tamanox-2][1] =' ';
     }
     //generar mas posibilidades
-    private void caminoD(){
-        boolean[][] visitado = new boolean[Tamanox][Tamanoy];
-        Queue<int[]> cola = new LinkedList<>();
-        cola.add(new int[]{0,1});
-        visitado[0][1]=true;
-
-        int[] dx = {-1,0,1,0}, dy = {0,1,0,-1};
-        while (!cola.isEmpty()) {
-            int[] actual = cola.poll();
-            int cx = actual[0];
-            int cy = actual[1];
-
-            for (int i = 0; i < 4; i++){
-                int nx = cx + dx[i];
-                int ny = cy + dy[i];
-                if (nx >=0&& nx < Tamanox && ny >= 0 && ny < Tamanoy && mapa[nx][ny] != '#' && !visitado[nx][ny]){
-                    visitado[nx][ny] = true;
-                    cola.add(new int[]{nx,ny});
-                }
-            }
-        }
-        if (!visitado[Tamanox-1][1]) {
-            caminosE();
-        }
-    }
 
     private void caminosE(){
         for (int i = 0; i < Tamanox; i++) {
             mapa[i][1] = ' ';
         }
-        mapa[0][1] = 'E';
-        mapa[Tamanox-1][1] = 'S';
     }
 
     private void complejo(){
@@ -336,29 +310,33 @@ public class Laverinto implements ILaberinto, IJuego{
         }
         Visi.add(x+","+y);
         int[] direcion = {0,1,2,3};
-        shuffleArray(direcion);
-        for (int dir: direcion){
-            int nx = x, ny= y;
-            switch (dir){
-                case 0:
-                    nx -= 2;
+        int contador=0;
+        while (contador<=2) {
+            shuffleArray(direcion);
+            for (int dir : direcion) {
+                int nx = x, ny = y;
+                switch (dir) {
+                    case 0:
+                        nx -= 2;
+                        break;
+                    case 1:
+                        ny += 2;
+                        break;
+                    case 2:
+                        nx += 2;
+                        break;
+                    case 3:
+                        ny -= 2;
+                        break;
+                }
+                if (nx > 1 && nx < Tamanox - 1 && ny > 1 && ny < Tamanoy - 1 && mapa[nx][ny] == '#') {
+                    mapa[nx][ny] = ' ';
+                    mapa[(x + nx) / 2][(y + ny) / 2] = ' ';
+                    caminoR(nx, ny, Visi);
                     break;
-                case 1:
-                    ny += 2;
-                    break;
-                case 2:
-                    nx += 2;
-                    break;
-                case 3:
-                    ny -= 2;
-                    break;
+                }
             }
-            if (nx >1 && nx < Tamanox-1 && ny > 1 && ny < Tamanoy-1 && mapa[nx][ny] == '#') {
-                mapa[nx][ny] = ' ';
-                mapa[(x+nx)/2][(y+ny)/2] = ' ';
-                caminoR(nx,ny,Visi);
-                break;
-            }
+            contador++;
         }
     }
 
