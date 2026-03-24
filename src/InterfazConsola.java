@@ -102,6 +102,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║  ┌─────────┬──────────────────────────────────────┐          ║");
         System.out.println("║  │   P     │  TU PERSONAJE (Jugador)              │          ║");
         System.out.println("║  │   M     │  EL MINOTAURO (Enemigo)              │          ║");
+        System.out.println("║  │   C     │  COFRE                               │          ║");
         System.out.println("║  │   E     │  ENTRADA del laberinto               │          ║");
         System.out.println("║  │   S     │  SALIDA del laberinto                │          ║");
         System.out.println("║  │   #     │  PARED (No se puede pasar)           │          ║");
