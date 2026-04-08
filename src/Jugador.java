@@ -15,10 +15,10 @@ public class Jugador extends Entidad{
 
     public boolean mover(char[][] mapa, Scanner sc){
         System.out.println("que quieres hacer: ");
-        String input = sc.nextLine().toLowerCase();
+        String menu = sc.nextLine().toLowerCase();
 
         int newX = x, newY = y;
-        switch (input){
+        switch (menu){
             case "w": newX--;
                 break; //arriva
             case "s": newX++;
