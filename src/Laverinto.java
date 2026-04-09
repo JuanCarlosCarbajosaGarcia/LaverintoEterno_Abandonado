@@ -4,18 +4,20 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto implements ILaberinto, IJuego{
-    private static final int Tamanox = 20;
-    private static final int Tamanoy = 50;
+    private static final int Tamanox = 5;
+    private static final int Tamanoy = 5;
     private static final int Max_intentos = 100;
 
     private final char[][] mapa = new char[Tamanox][Tamanoy];
     private final Random rand = new Random(System.currentTimeMillis());
+    private final Random enemigos = new Random();
     private final Scanner laverintosc = new Scanner(System.in);
 
     private final IInterfaz interfaz = new InterfazConsola();
 
     private final Jugador jugador;
-    private Enemigo enemigo;
+    private Minotauro minos;
+    private Gorgona medusa;
     private int nivel = 1;
     private boolean juego = true;
     private boolean primerJuego = true;
@@ -40,6 +42,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
         //iniciar enemigo
         minotauro();
+        medusa();
 
         //bucle de juego
         while(juego){
@@ -110,21 +113,22 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
 
                 nivelActivo = false;
-                enemigo.curar();
+                minos.curar();
+                medusa.curar();
                 continue;
             }
 
-            //ataque de enemigo
-            if (jugador.getX() == enemigo.getX() && jugador.getY() == enemigo.getY()) {
-                interfaz.mostrarMensaje("El Minotauro te a atacado");
+            //ataque de enemigo (minos)
+            if (jugador.getX() == minos.getX() && jugador.getY() == minos.getY()) {
+                interfaz.mostrarMensaje("Minos te a atacado");
 
-                int danoRecibido = enemigo.getDano();
+                int danoRecibido = minos.getDano();
                 int danoHecho = jugador.getDano();
 
                 jugador.setVida(jugador.getVida() - danoRecibido);
                 interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
 
-                enemigo.setVida(enemigo.getVida() - danoHecho);
+                minos.setVida(minos.getVida() - danoHecho);
 
                 if (jugador.estaVivo()) {
                     //jugador sobrevive
@@ -133,7 +137,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     separar();
                 } else {
                     //jugador muere
-                    interfaz.mostrarError("el minotauro te ha devorado");
+                    interfaz.mostrarError("Minos te ha devorado");
                     interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
                     interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
                     guardarMapa();
@@ -141,13 +145,49 @@ public class Laverinto implements ILaberinto, IJuego{
                     return;
                 }
 
-                if (enemigo.getVida() == 0) {
+                if (minos.getVida() == 0) {
                     //minos muere
-                    enemigo.aumentarMuertes(1);
-                    interfaz.mostrarMensaje("El minotauro a muerto");
+                    minos.aumentarMuertes(1);
+                    interfaz.mostrarMensaje("Minos a muerto");
                     dificultad();
-                    enemigo.setX(mapa.length + 1);
-                    enemigo.setY(mapa.length + 1);
+                    minos.setX(mapa.length + 1);
+                    minos.setY(mapa.length + 1);
+                }
+            }
+
+            if (jugador.getX() == medusa.getX() && jugador.getY() == medusa.getY()) {
+                interfaz.mostrarMensaje("Medusa te a atacado");
+
+                int danoRecibido = medusa.getDano();
+                int danoHecho = jugador.getDano();
+
+                jugador.setVida(jugador.getVida() - danoRecibido);
+                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
+
+                medusa.setVida((medusa.getVida() - danoHecho));
+
+                if (jugador.estaVivo()) {
+                    //jugador sobrevive
+                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
+                    interfaz.mostrarExito("has escapado con vida.");
+                    separar();
+                }else {
+                    //jugador muere
+                    interfaz.mostrarMensaje("Medusa te ha petrificado");
+                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
+                    guardarMapa();
+                    juego = false;
+                    return;
+                }
+
+                if (medusa.getVida() == 0) {
+                    //medusa muere
+                    medusa.aumentarMuertes(1);
+                    interfaz.mostrarMensaje("Medusa a muerto");
+                    dificultad();
+                    medusa.setX(mapa.length + 1);
+                    medusa.setY(mapa.length + 1);
                 }
             }
             //encontrar cofre
@@ -174,7 +214,9 @@ public class Laverinto implements ILaberinto, IJuego{
             }
 
             //movimiento Minos
-            enemigo.mover(mapa, rand, mapa.length, mapa[0].length);
+            minos.mover(mapa, rand, mapa.length, mapa[0].length);
+            //Movimiento Medusa
+            medusa.mover(mapa, rand, mapa.length, mapa[0].length);
         }
     }
     @Override
@@ -205,8 +247,16 @@ public class Laverinto implements ILaberinto, IJuego{
 
                 //verificar la posicion
                 if (mapa[newX][newY] != '#' && distancia >= 5 && mapa[newX][newY] != entrada) {
-                    enemigo.setX(newX);
-                    enemigo.setY(newY);
+                    switch (enemigos.nextInt(2)+1) {
+                        case 1:
+                                minos.setX(newX);
+                                minos.setY(newY);
+                        break;
+                        case 2:
+                                medusa.setX(newX);
+                                medusa.setY(newY);
+                        break;
+                    }
                     posicionValida = true;
                 }
             }
@@ -407,9 +457,11 @@ public class Laverinto implements ILaberinto, IJuego{
             for(int j = 0; j < Tamanoy; j++){
                 if (i == jugador.getX() && j == jugador.getY()){
                     System.out.print(InterfazConsola.VERDE+'P'+InterfazConsola.RESET);
-                }else if (i == enemigo.getX() && j == enemigo.getY()){
-                    System.out.print(InterfazConsola.ROJO+'M'+InterfazConsola.RESET);
-                } else if (mapa[i][j]=='E') {
+                }else if (i == minos.getX() && j == minos.getY()) {
+                    System.out.print(InterfazConsola.ROJO + 'M' + InterfazConsola.RESET);
+                }else if (i == medusa.getX() && j == medusa.getY()) {
+                    System.out.print(InterfazConsola.ROJO + 'G' + InterfazConsola.RESET);
+                }else if (mapa[i][j]=='E') {
                     System.out.print(InterfazConsola.AZUL+'E'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='S') {
                     System.out.print(InterfazConsola.VERDE_CLARO+'S'+InterfazConsola.RESET);
@@ -468,7 +520,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 for(int j = 0; j < Tamanoy; j++){
                     if (i == jugador.getX() && j == jugador.getY()){
                         writer.write('P');
-                    } else if (i == enemigo.getX() && j == enemigo.getY()){
+                    } else if (i == minos.getX() && j == minos.getY()){
                         writer.write('M');
                     } else {
                         writer.write(mapa[i][j]);
@@ -484,8 +536,11 @@ public class Laverinto implements ILaberinto, IJuego{
         }
     }
     private void minotauro(){
-        //enemigo
-        enemigo = new Enemigo("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+        //enemigos
+        minos = new Minotauro("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+    }
+    private void medusa(){
+        medusa = new Gorgona("Medusa", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
     }
     private void dificultad(){
         int vid = 150;
@@ -494,16 +549,28 @@ public class Laverinto implements ILaberinto, IJuego{
         int muertesvid;
         int muertesdan;
 
-        if (enemigo.muertes <= 1) {
+        if (minos.muertes <= 1) {
             muertesvid = vid;
-            enemigo.setVida(muertesvid);
+            minos.setVida(muertesvid);
             muertesdan = dan;
-            enemigo.setDano(muertesdan);
+            minos.setDano(muertesdan);
         } else {
-            muertesvid = enemigo.muertes * vid;
-            enemigo.setVida(muertesvid);
-            muertesdan = enemigo.muertes * dan;
-            enemigo.setDano(muertesdan);
+            muertesvid = minos.muertes * vid;
+            minos.setVida(muertesvid);
+            muertesdan = minos.muertes * dan;
+            minos.setDano(muertesdan);
+        }
+
+        if (medusa.muertes <= 1) {
+            muertesvid = vid;
+            medusa.setVida(muertesvid);
+            muertesdan = dan;
+            medusa.setDano(muertesdan);
+        } else {
+            muertesvid = medusa.muertes * vid;
+            medusa.setVida(muertesvid);
+            muertesdan = medusa.muertes * dan;
+            medusa.setDano(muertesdan);
         }
     }
     private void Cofres() {

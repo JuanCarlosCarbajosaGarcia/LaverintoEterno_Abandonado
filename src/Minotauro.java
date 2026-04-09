@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Enemigo extends Entidad{
+public class Minotauro extends Entidad{
     private int x,y;
 
-    public Enemigo(String nombre, String Tipo, int vida, int dano, int starX, int starY) {
+    public Minotauro(String nombre, String Tipo, int vida, int dano, int starX, int starY) {
 
         super(nombre, Tipo, vida, dano);
 

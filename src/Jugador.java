@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Jugador extends Entidad{
     private int x,y;
     private Scanner jugadorsc;
+    private boolean estatua = false;
 
     public Jugador(String nombre, String Tipo, int vida,int dano, int starX, int starY) {
 
@@ -18,40 +19,45 @@ public class Jugador extends Entidad{
         String menu = sc.nextLine().toLowerCase();
 
         int newX = x, newY = y;
-        switch (menu){
-            case "w": newX--;
-                break; //arriva
-            case "s": newX++;
-                break; //abajo
-            case "a": newY--;
-                break; //izquierda
-            case "d": newY++;
-                break; //derecha
-            case "p": //abrir menu desarrollo
-                boolean menuDes = true;
-                while(menuDes) {
-                    System.out.println("menu");
-                    System.out.println("1: tienda");
-                    System.out.println("2: volver al juego");
-                    int menudes = jugadorsc.nextInt();
-                    switch (menudes) {
-                        case 1:
-                            Vendedor vendedor = new Vendedor(1);
-                            boolean volver = vendedor.mostrarTienda(this);
-                            if (volver) return true;
-                            break;
-                        case 2:
-                            menuDes = false;
-                            break;
-                        default: System.out.println("movimiento invalido");
-                            return false;
+        if (!estatua){
+            switch (menu){
+                case "w": newX--;
+                    break; //arriva
+                case "s": newX++;
+                    break; //abajo
+                case "a": newY--;
+                    break; //izquierda
+                case "d": newY++;
+                    break; //derecha
+                case "p": //abrir menu desarrollo
+                    boolean menuDes = true;
+                    while(menuDes) {
+                        System.out.println("menu");
+                        System.out.println("1: tienda");
+                        System.out.println("2: volver al juego");
+                        int menudes = jugadorsc.nextInt();
+                        switch (menudes) {
+                            case 1:
+                                Vendedor vendedor = new Vendedor(1);
+                                boolean volver = vendedor.mostrarTienda(this);
+                                if (volver) return true;
+                                break;
+                            case 2:
+                                menuDes = false;
+                                break;
+                            default: System.out.println("movimiento invalido");
+                                return false;
+                        }
                     }
-                }
-                break;
-            case "q": //volver al menu
-                return true;
-            default: System.out.println("movimiento invalido");
-                return false;
+                    break;
+                case "q": //volver al menu
+                    return true;
+                default: System.out.println("movimiento invalido");
+                    return false;
+            }
+        }else {
+            System.out.println("estas petrificado");
+            return false;
         }
 
         //asegurarse de que el movimiento es posible
@@ -78,5 +84,13 @@ public class Jugador extends Entidad{
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public boolean isEstatua() {
+        return estatua;
+    }
+
+    public void setEstatua(boolean estatua) {
+        this.estatua = estatua;
     }
 }

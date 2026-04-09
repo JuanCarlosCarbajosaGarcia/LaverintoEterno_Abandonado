@@ -52,7 +52,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓      ║");
         System.out.println("║      ▓▓                                                      ▓▓      ║");
         System.out.println("║      ▓▓           Una aventura de supervivencia              ▓▓      ║");
-        System.out.println("║      ▓▓            contra el Minotauro (Minos)               ▓▓      ║");
+        System.out.println("║      ▓▓                 contra el laverinto                  ▓▓      ║");
         System.out.println("║      ▓▓                                                      ▓▓      ║");
         System.out.println("║      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓      ║");
         System.out.println("║                                                                      ║");
@@ -86,7 +86,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("╠══════════════════════════════════════════════════════════════╣");
         System.out.println("║                                                              ║");
         System.out.println("║  " + VERDE + "OBJETIVO:" + CIAN + "                                                   ║");
-        System.out.println("║  Escapa del laberinto evitando al Minotauro (Minos).         ║");
+        System.out.println("║  Escapa del laberinto evitando al los enemigos.              ║");
         System.out.println("║  Cada nivel tiene una salida (S) que debes encontrar.        ║");
         System.out.println("║                                                              ║");
         System.out.println("║  " + AMARILLO + "  CONTROLES:" + CIAN + "                                                ║");
@@ -102,7 +102,8 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║  ┌─────────┬──────────────────────────────────────┐          ║");
         System.out.println("║  │   P     │  TU PERSONAJE (Jugador)              │          ║");
         System.out.println("║  │   M     │  EL MINOTAURO (Enemigo)              │          ║");
-        System.out.println("║  │   C     │  COFRE                               │          ║");
+        System.out.println("║  │   G     │  LA GORGONA   (Enemigo)              │          ║");
+        System.out.println("║  │   C     │  COFRE (oro)                         │          ║");
         System.out.println("║  │   E     │  ENTRADA del laberinto               │          ║");
         System.out.println("║  │   S     │  SALIDA del laberinto                │          ║");
         System.out.println("║  │   #     │  PARED (No se puede pasar)           │          ║");
@@ -111,7 +112,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║                                                              ║");
         System.out.println("║  " + ROJO + "COMBATE:" + CIAN + "                                                    ║");
         System.out.println("║  Si te encuentras con M, ¡combatirás! ambos sufrireis daño   ║");
-        System.out.println("║              ¡Sobrevive y llega a la salida!                 ║");
+        System.out.println("║               ¡Sobrevive todo lo que puedas!                 ║");
         System.out.println("║                                                              ║");
         System.out.println("╚══════════════════════════════════════════════════════════════╝");
         System.out.println(RESET);
