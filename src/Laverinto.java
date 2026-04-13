@@ -156,6 +156,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
 
+            //ataque de medusa
             if (jugador.getX() == medusa.getX() && jugador.getY() == medusa.getY()) {
                 interfaz.mostrarMensaje("Medusa te a atacado");
 
@@ -190,6 +191,12 @@ public class Laverinto implements ILaberinto, IJuego{
                     medusa.setX(mapa.length + 1);
                     medusa.setY(mapa.length + 1);
                 }
+            }
+            //proximidad de medusa
+            if (jugador.getX() == medusa.getX()+1 && jugador.getY() == medusa.getY()+1) {
+                jugador.setEstatua(true);
+            }else {
+                jugador.setEstatua(false);
             }
             //encontrar cofre
             Iterator<Tesoro> itcofre = tesoros.iterator();
