@@ -39,6 +39,7 @@ public class Laverinto implements ILaberinto, IJuego{
         //iniciar el jugador
         jugador = new Jugador(nombre,"jugador",10,10,0,1);
         jugador.setOro(0);
+        jugador.setEstatua(false);
 
         //iniciar enemigo
         minotauro();
@@ -193,13 +194,13 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
             //proximidad de medusa
-            if (jugador.getX() == medusa.getX()+1) {
+            if (jugador.getX() == (medusa.getX()+1)) {
                 jugador.setEstatua(true);
-            }else if (jugador.getY() == medusa.getY()+1) {
+            }else if (jugador.getY() == (medusa.getY()+1)) {
                 jugador.setEstatua(true);
-            }else if (jugador.getY() == medusa.getY()-1) {
+            }else if (jugador.getY() == (medusa.getY()-1)) {
                 jugador.setEstatua(true);
-            }else if (jugador.getX() == medusa.getX()-1) {
+            }else if (jugador.getX() == (medusa.getX()-1)) {
                     jugador.setEstatua(true);
             }else {
                 jugador.setEstatua(false);
