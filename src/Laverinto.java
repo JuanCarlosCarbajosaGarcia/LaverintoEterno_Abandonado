@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto implements ILaberinto, IJuego{
-    private static final int Tamanox = 5;
-    private static final int Tamanoy = 5;
+    private static final int Tamanox = 20;
+    private static final int Tamanoy = 50;
     private static final int Max_intentos = 100;
 
     private final char[][] mapa = new char[Tamanox][Tamanoy];
@@ -101,6 +101,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "Ganaste: " + premio + " de Oro" + InterfazConsola.RESET);
 
                 guardarMapa();
+                resetEnemigos();
 
                 //ir al vendedor
                 Vendedor vendedor = new Vendedor(nivel);
@@ -536,11 +537,12 @@ public class Laverinto implements ILaberinto, IJuego{
         }
     }
     private void minotauro(){
-        //enemigos
-        minos = new Minotauro("Minos", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+        //minotauro
+        minos = new Minotauro("Minos", "enemigo", 100, 10, Tamanox +1, Tamanoy +1);
     }
     private void medusa(){
-        medusa = new Gorgona("Medusa", "enemigo", 100, 10, Tamanox / 2, Tamanoy / 2);
+        //gorgona
+        medusa = new Gorgona("Medusa", "enemigo", 100, 10, Tamanox +1, Tamanoy +1);
     }
     private void dificultad(){
         int vid = 150;
@@ -597,5 +599,11 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
         }
+    }
+    private void resetEnemigos(){
+        minos.setX(Tamanox+1);
+        minos.setY(Tamanoy+1);
+        medusa.setX(Tamanox+1);
+        medusa.setY(Tamanoy+1);
     }
 }
