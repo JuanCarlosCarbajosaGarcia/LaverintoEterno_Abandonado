@@ -523,6 +523,8 @@ public class Laverinto implements ILaberinto, IJuego{
                         writer.write('P');
                     } else if (i == minos.getX() && j == minos.getY()){
                         writer.write('M');
+                    } else if (i == medusa.getX() && j == medusa.getY()){
+                        writer.write('G');
                     } else {
                         writer.write(mapa[i][j]);
                     }
