@@ -105,7 +105,7 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║  │   G     │  LA GORGONA   (Enemigo)              │          ║");
         System.out.println("║  │   C     │  COFRE (oro)                         │          ║");
         System.out.println("║  │   E     │  ENTRADA del laberinto               │          ║");
-        System.out.println("║  │   S     │  SALIDA del laberinto                │          ║");
+        System.out.println("║  │   S     │  SALIDA del laberinto (objetivo)     │          ║");
         System.out.println("║  │   #     │  PARED (No se puede pasar)           │          ║");
         System.out.println("║  │   █     │  CAMINO LIBRE                        │          ║");
         System.out.println("║  └─────────┴──────────────────────────────────────┘          ║");
@@ -125,17 +125,17 @@ public class InterfazConsola implements IInterfaz{
 
     @Override
     public void mostrarError(String mensaje) {
-        System.out.println(ROJO+NEGRITA+" x "+mensaje+" x "+RESET);
+        System.out.println(ROJO+NEGRITA+mensaje+RESET);
     }
 
     @Override
     public void mostrarExito(String mensaje) {
-        System.out.println("\n" + VERDE + NEGRITA + "  ✓  " + mensaje + "  ✓" + RESET);
+        System.out.println("\n" + VERDE + NEGRITA + mensaje + RESET);
     }
 
     @Override
     public void mostrarInfo(String mensaje) {
-        System.out.println(AZUL + "  ℹ  " + mensaje + RESET);
+        System.out.println(AZUL + mensaje + RESET);
     }
 
     @Override
@@ -178,11 +178,11 @@ public class InterfazConsola implements IInterfaz{
     @Override
     public void mostrarInfo(int nivel,int vida,int vidaMax, int oro, int dano){
         System.out.println("\n" + CIAN + NEGRITA + "═══════════════════════════════════════" + RESET);
-        System.out.println(CIAN + "  📊  NIVEL: " + ROJO_CLARO + nivel + RESET);
+        System.out.println(CIAN + "  NIVEL: " + ROJO_CLARO + nivel + RESET);
         mostrarVida(vida,vidaMax);
         System.out.println();
-        System.out.println(CIAN + "  💰  ORO: " + AMARILLO + oro + RESET);
-        System.out.println(CIAN + "  ⚔️  DAÑO: " + ROJO + dano + RESET);
+        System.out.println(CIAN + "  ORO: " + AMARILLO + oro + RESET);
+        System.out.println(CIAN + "  DAÑO: " + ROJO + dano + RESET);
         System.out.println(CIAN + NEGRITA + "═══════════════════════════════════════" + RESET);
     }
     @Override

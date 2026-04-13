@@ -42,15 +42,18 @@ public class Gorgona extends Entidad{
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(int x)
+    {
         this.x = x;
     }
 
-    public int getY() {
+    public int getY()
+    {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(int y)
+    {
         this.y = y;
     }
 }
