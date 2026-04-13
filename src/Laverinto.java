@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto implements ILaberinto, IJuego{
-    private static final int Tamanox = 20;
-    private static final int Tamanoy = 50;
+    private static final int Tamanox = 15;
+    private static final int Tamanoy = 30;
     private static final int Max_intentos = 100;
 
     private final char[][] mapa = new char[Tamanox][Tamanoy];
@@ -193,8 +193,14 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
             //proximidad de medusa
-            if (jugador.getX() == medusa.getX()+1 && jugador.getY() == medusa.getY()+1) {
+            if (jugador.getX() == medusa.getX()+1) {
                 jugador.setEstatua(true);
+            }else if (jugador.getY() == medusa.getY()+1) {
+                jugador.setEstatua(true);
+            }else if (jugador.getY() == medusa.getY()-1) {
+                jugador.setEstatua(true);
+            }else if (jugador.getX() == medusa.getX()-1) {
+                    jugador.setEstatua(true);
             }else {
                 jugador.setEstatua(false);
             }
