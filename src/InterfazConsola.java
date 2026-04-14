@@ -111,11 +111,14 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║  └─────────┴──────────────────────────────────────┘          ║");
         System.out.println("║                                                              ║");
         System.out.println("║  " + ROJO + "COMBATE:" + CIAN + "                                                    ║");
-        System.out.println("║  Si te encuentras con M, ¡combatirás! ambos sufrireis daño   ║");
+        System.out.println("║           Si te encuentras con cualquier enemigo,            ║");
+        System.out.println("║             ¡combatirás! ambos sufrireis daño                ║");
         System.out.println("║               ¡Sobrevive todo lo que puedas!                 ║");
         System.out.println("║                                                              ║");
         System.out.println("╚══════════════════════════════════════════════════════════════╝");
         System.out.println(RESET);
+        System.out.println("presiona enter para continuar");
+        interfacsc.nextLine();
     }
 
     @Override
