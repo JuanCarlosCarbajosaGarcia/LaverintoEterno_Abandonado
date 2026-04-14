@@ -16,7 +16,7 @@ public class Laverinto implements ILaberinto, IJuego{
     private final IInterfaz interfaz = new InterfazConsola();
 
     private final Jugador jugador;
-    private Minotauro minos;
+    private Minotauro asterion;
     private Gorgona medusa;
     private int nivel = 1;
     private boolean juego = true;
@@ -68,7 +68,7 @@ public class Laverinto implements ILaberinto, IJuego{
         } while (!posible && intentos < Max_intentos);
 
         if (!posible) {
-            caminosE();
+            caasterionE();
             return;
         }
 
@@ -115,31 +115,31 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
 
                 nivelActivo = false;
-                minos.curar();
+                asterion.curar();
                 medusa.curar();
                 continue;
             }
 
-            //ataque de enemigo (minos)
-            if (jugador.getX() == minos.getX() && jugador.getY() == minos.getY()) {
-                interfaz.mostrarMensaje("Minos te a atacado");
+            //ataque de enemigo (asterion)
+            if (jugador.getX() == asterion.getX() && jugador.getY() == asterion.getY()) {
+                interfaz.mostrarMensaje("asterion te a atacado");
 
-                int danoRecibido = minos.getDano();
+                int danoRecibido = asterion.getDano();
                 int danoHecho = jugador.getDano();
 
                 jugador.setVida(jugador.getVida() - danoRecibido);
                 interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
 
-                minos.setVida(minos.getVida() - danoHecho);
+                asterion.setVida(asterion.getVida() - danoHecho);
 
                 if (jugador.estaVivo()) {
                     //jugador sobrevive
-                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
+                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Asterion.");
                     interfaz.mostrarExito("has escapado con vida.");
                     separar();
                 } else {
                     //jugador muere
-                    interfaz.mostrarError("Minos te ha devorado");
+                    interfaz.mostrarError("Asterion te ha devorado");
                     interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
                     interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
                     guardarMapa();
@@ -147,14 +147,19 @@ public class Laverinto implements ILaberinto, IJuego{
                     return;
                 }
 
-                if (minos.getVida() == 0) {
-                    //minos muere
-                    minos.aumentarMuertes(1);
-                    interfaz.mostrarMensaje("Minos a muerto");
+                if (asterion.getVida() == 0) {
+                    //asterion muere
+                    asterion.aumentarMuertes(1);
+                    interfaz.mostrarMensaje("Asterion a muerto");
                     dificultad();
-                    minos.setX(mapa.length + 1);
-                    minos.setY(mapa.length + 1);
+                    asterion.setX(mapa.length + 1);
+                    asterion.setY(mapa.length + 1);
                 }
+            }
+            //berserker asterion
+            if (asterion.vida <= (asterion.vidaMax/4)){
+                asterion.setDano(asterion.dano*2);
+                System.out.println("Asterion se ha enfurecido");
             }
 
             //ataque de medusa
@@ -171,7 +176,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
                 if (jugador.estaVivo()) {
                     //jugador sobrevive
-                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño al enemigo.");
+                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Medusa.");
                     interfaz.mostrarExito("has escapado con vida.");
                     separar();
                 }else {
@@ -228,8 +233,8 @@ public class Laverinto implements ILaberinto, IJuego{
                 return;
             }
 
-            //movimiento Minos
-            minos.mover(mapa, rand, mapa.length, mapa[0].length);
+            //movimiento asterion
+            asterion.mover(mapa, rand, mapa.length, mapa[0].length);
             //Movimiento Medusa
             medusa.mover(mapa, rand, mapa.length, mapa[0].length);
         }
@@ -264,8 +269,8 @@ public class Laverinto implements ILaberinto, IJuego{
                 if (mapa[newX][newY] != '#' && distancia >= 5 && mapa[newX][newY] != entrada) {
                     switch (enemigos.nextInt(2)+1) {
                         case 1:
-                                minos.setX(newX);
-                                minos.setY(newY);
+                                asterion.setX(newX);
+                                asterion.setY(newY);
                         break;
                         case 2:
                                 medusa.setX(newX);
@@ -352,7 +357,7 @@ public class Laverinto implements ILaberinto, IJuego{
     }
     //generar mas posibilidades
 
-    private void caminosE(){
+    private void caasterionE(){
         for (int i = 0; i < Tamanox; i++) {
             mapa[i][1] = ' ';
         }
@@ -472,7 +477,7 @@ public class Laverinto implements ILaberinto, IJuego{
             for(int j = 0; j < Tamanoy; j++){
                 if (i == jugador.getX() && j == jugador.getY()){
                     System.out.print(InterfazConsola.VERDE+'P'+InterfazConsola.RESET);
-                }else if (i == minos.getX() && j == minos.getY()) {
+                }else if (i == asterion.getX() && j == asterion.getY()) {
                     System.out.print(InterfazConsola.ROJO + 'M' + InterfazConsola.RESET);
                 }else if (i == medusa.getX() && j == medusa.getY()) {
                     System.out.print(InterfazConsola.ROJO + 'G' + InterfazConsola.RESET);
@@ -535,7 +540,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 for(int j = 0; j < Tamanoy; j++){
                     if (i == jugador.getX() && j == jugador.getY()){
                         writer.write('P');
-                    } else if (i == minos.getX() && j == minos.getY()){
+                    } else if (i == asterion.getX() && j == asterion.getY()){
                         writer.write('M');
                     } else if (i == medusa.getX() && j == medusa.getY()) {
                         writer.write('G');
@@ -554,7 +559,7 @@ public class Laverinto implements ILaberinto, IJuego{
     }
     private void minotauro(){
         //minotauro
-        minos = new Minotauro("Minos", "enemigo", 100, 10, Tamanox +1, Tamanoy +1);
+        asterion = new Minotauro("asterion", "enemigo", 100, 10, Tamanox +1, Tamanoy +1);
     }
     private void medusa(){
         //gorgona
@@ -567,16 +572,16 @@ public class Laverinto implements ILaberinto, IJuego{
         int muertesvid;
         int muertesdan;
 
-        if (minos.muertes <= 1) {
+        if (asterion.muertes <= 1) {
             muertesvid = vid;
-            minos.setVida(muertesvid);
+            asterion.setVida(muertesvid);
             muertesdan = dan;
-            minos.setDano(muertesdan);
+            asterion.setDano(muertesdan);
         } else {
-            muertesvid = minos.muertes * vid;
-            minos.setVida(muertesvid);
-            muertesdan = minos.muertes * dan;
-            minos.setDano(muertesdan);
+            muertesvid = asterion.muertes * vid;
+            asterion.setVida(muertesvid);
+            muertesdan = asterion.muertes * dan;
+            asterion.setDano(muertesdan);
         }
 
         if (medusa.muertes <= 1) {
@@ -617,8 +622,8 @@ public class Laverinto implements ILaberinto, IJuego{
         }
     }
     private void resetEnemigos(){
-        minos.setX(Tamanox+1);
-        minos.setY(Tamanoy+1);
+        asterion.setX(Tamanox+1);
+        asterion.setY(Tamanoy+1);
         medusa.setX(Tamanox+1);
         medusa.setY(Tamanoy+1);
     }
