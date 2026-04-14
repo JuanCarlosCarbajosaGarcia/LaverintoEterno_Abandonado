@@ -86,10 +86,6 @@ public class Jugador extends Entidad{
         this.y = y;
     }
 
-    public boolean isEstatua() {
-        return estatua;
-    }
-
     public void setEstatua(boolean estatua) {
         this.estatua = estatua;
     }
