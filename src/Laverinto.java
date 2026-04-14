@@ -199,15 +199,14 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
             //proximidad de medusa
-            if (jugador.getX() == (medusa.getX()+1)) {
+            double distamcia = Math.sqrt(
+                    Math.pow(jugador.getX() - medusa.getX(), 2) +
+                    Math.pow(jugador.getY() - medusa.getY(), 2)
+            );
+
+            if (distamcia <= 1.5){
                 jugador.setEstatua(true);
-            }else if (jugador.getY() == (medusa.getY()+1)) {
-                jugador.setEstatua(true);
-            }else if (jugador.getY() == (medusa.getY()-1)) {
-                jugador.setEstatua(true);
-            }else if (jugador.getX() == (medusa.getX()-1)) {
-                    jugador.setEstatua(true);
-            }else {
+            } else {
                 jugador.setEstatua(false);
             }
             //encontrar cofre
