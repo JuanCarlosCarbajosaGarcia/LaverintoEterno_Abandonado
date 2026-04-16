@@ -265,7 +265,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 int entrada = mapa[0][1];
 
                 //verificar la posicion
-                if (mapa[newX][newY] != '#' && distancia >= 5 && mapa[newX][newY] != entrada) {
+                if (mapa[newX][newY] != '█' && distancia >= 5 && mapa[newX][newY] != entrada) {
                     switch (enemigos.nextInt(2)+1) {
                         case 1:
                                 asterion.setX(newX);
@@ -292,7 +292,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
     public void mapaB() {
         for (int i = 0; i < Tamanox; i++) {
-            Arrays.fill(mapa[i], '#');
+            Arrays.fill(mapa[i], '█');
         }
         caminoP();
 
@@ -300,10 +300,10 @@ public class Laverinto implements ILaberinto, IJuego{
 
         //poner los bordes
         for (int i = 0; i < Tamanox; i++){
-            mapa[i][Tamanoy-1] = '#';
+            mapa[i][Tamanoy-1] = '█';
         }
         for (int j = 0; j < Tamanoy; j++){
-            mapa[Tamanox-1][j] = '#';
+            mapa[Tamanox-1][j] = '█';
         }
         mapa[0][1] = 'E'; //entrada
         mapa[Tamanox - 1][1]= 'S'; //salida
@@ -331,7 +331,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     break; // Izquierda
             }
             //verificar que los limites sean pared
-            if (nx >0 && nx < Tamanox && ny > 0 && ny < Tamanoy && mapa[nx][ny]=='#'){
+            if (nx >0 && nx < Tamanox && ny > 0 && ny < Tamanoy && mapa[nx][ny]=='█'){
                 mapa[nx][ny] = ' '; //quitar pared
                 mapa[x + (nx-x)/2][y + (ny-y)/2]=' ';
                 camino(nx,ny);
@@ -398,7 +398,7 @@ public class Laverinto implements ILaberinto, IJuego{
                         ny -= 2;
                         break;
                 }
-                if (nx > 1 && nx < Tamanox - 1 && ny > 1 && ny < Tamanoy - 1 && mapa[nx][ny] == '#') {
+                if (nx > 1 && nx < Tamanox - 1 && ny > 1 && ny < Tamanoy - 1 && mapa[nx][ny] == '█') {
                     mapa[nx][ny] = ' ';
                     mapa[(x + nx) / 2][(y + ny) / 2] = ' ';
                     caminoR(nx, ny, Visi);
@@ -420,12 +420,12 @@ public class Laverinto implements ILaberinto, IJuego{
 
     private void mapaF(){
         for (int i = 0; i < Tamanox; i++) {
-            mapa[i][0] = '#';
-            mapa[i][Tamanoy-1] = '#';
+            mapa[i][0] = '█';
+            mapa[i][Tamanoy-1] = '█';
         }
         for (int j = 0; j < Tamanoy; j++) {
-            mapa[0][j] = '#';
-            mapa[Tamanox-1][j] = '#';
+            mapa[0][j] = '█';
+            mapa[Tamanox-1][j] = '█';
         }
         mapa[0][1] = 'E';
         mapa[Tamanox-1][1] = 'S';
@@ -453,7 +453,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     int nx = x + dx[d];
                     int ny = y + dy[d];
 
-                    if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy && mapa[nx][ny] != '#' && !visi[nx][ny]){
+                    if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy && mapa[nx][ny] != '█' && !visi[nx][ny]){
                         visi[nx][ny] = true;
                         cola.add(new int[]{nx,ny});
                     }
@@ -484,8 +484,8 @@ public class Laverinto implements ILaberinto, IJuego{
                     System.out.print(InterfazConsola.AZUL+'E'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='S') {
                     System.out.print(InterfazConsola.VERDE_CLARO+'S'+InterfazConsola.RESET);
-                } else if (mapa[i][j]=='#') {
-                    System.out.print(InterfazConsola.GRIS+'#'+InterfazConsola.RESET);
+                } else if (mapa[i][j]=='█') {
+                    System.out.print(InterfazConsola.GRIS+'█'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='C') {
                     System.out.print(InterfazConsola.AMARILLO+'C'+InterfazConsola.RESET);
                 } else {
@@ -610,7 +610,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 int entrada = mapa[0][1];
 
                 //verificar la posicion
-                if (mapa[newX][newY] != '#' && distancia >= 10 && mapa[newX][newY] != entrada && !(newX == jugador.getX() && newY == jugador.getY())) {
+                if (mapa[newX][newY] != '█' && distancia >= 10 && mapa[newX][newY] != entrada && !(newX == jugador.getX() && newY == jugador.getY())) {
                     Tesoro nuevotesoro = new Tesoro("cofre", "Tesoro", 1, 0, newX,newY);
                     tesoros.add(nuevotesoro);
                     mapa[newX][newY] = 'C';

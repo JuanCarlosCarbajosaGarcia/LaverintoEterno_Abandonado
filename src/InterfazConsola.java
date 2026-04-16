@@ -106,8 +106,8 @@ public class InterfazConsola implements IInterfaz{
         System.out.println("║  │   C     │  COFRE (oro)                         │          ║");
         System.out.println("║  │   E     │  ENTRADA del laberinto               │          ║");
         System.out.println("║  │   S     │  SALIDA del laberinto (objetivo)     │          ║");
-        System.out.println("║  │   #     │  PARED (No se puede pasar)           │          ║");
-        System.out.println("║  │   █     │  CAMINO LIBRE                        │          ║");
+        System.out.println("║  │   █     │  PARED (No se puede pasar)           │          ║");
+        System.out.println("║  │  ' '    │  CAMINO LIBRE                        │          ║");
         System.out.println("║  └─────────┴──────────────────────────────────────┘          ║");
         System.out.println("║                                                              ║");
         System.out.println("║  " + ROJO + "COMBATE:" + CIAN + "                                                    ║");
