@@ -4,12 +4,13 @@ static IInterfaz interfaz = new InterfazConsola();
 
 void main() {
     interfaz.mostrarBienvenida();
+    mostrarControles();
     mostrarMenu();
 }
 
 static void mostrarMenu() {
     while (juegoA) {
-        mostrarControles();
+
         interfaz.mostrarMenu();
 
         try{
