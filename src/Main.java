@@ -9,6 +9,7 @@ void main() {
 
 static void mostrarMenu() {
     while (juegoA) {
+        mostrarControles();
         interfaz.mostrarMenu();
 
         try{
