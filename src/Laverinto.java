@@ -24,6 +24,7 @@ public class Laverinto implements ILaberinto, IJuego{
     private boolean primerJuego = true;
     private final List<Tesoro> tesoros = new ArrayList<>();
     private final List<Cabezas> cabeza = new ArrayList<>();
+    private int totalcabezas;
     private static final int minpasos = 1;
     private static final int maxpasos = 9999;
 
@@ -249,6 +250,7 @@ public class Laverinto implements ILaberinto, IJuego{
                     dificultad();
                     lernaean.setX(mapa.length + 1);
                     lernaean.setY(mapa.length + 1);
+                    cabeza.clear();
                 }
             }
             //cabezas de lernaean
@@ -318,6 +320,8 @@ public class Laverinto implements ILaberinto, IJuego{
             asterion.mover(mapa, rand, mapa.length, mapa[0].length);
             //Movimiento Medusa
             medusa.mover(mapa, rand, mapa.length, mapa[0].length);
+            //Movimiento de las cabezas de lerneaen
+            cabeza.mover(mapa, rand)
         }
     }
     @Override
@@ -348,7 +352,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
                 //verificar la posicion
                 if (mapa[newX][newY] != '█' && distancia >= 5 && mapa[newX][newY] != entrada) {
-                    switch (enemigos.nextInt(2)+1) {
+                    switch (enemigos.nextInt(1)+3) {
                         case 1:
                                 asterion.setX(newX);
                                 asterion.setY(newY);
@@ -356,6 +360,11 @@ public class Laverinto implements ILaberinto, IJuego{
                         case 2:
                                 medusa.setX(newX);
                                 medusa.setY(newY);
+                        break;
+                        case 3:
+                            lernaean.setX(newX);
+                            lernaean.setY(newY);
+                            cabezas();
                         break;
                     }
                     posicionValida = true;
@@ -562,14 +571,18 @@ public class Laverinto implements ILaberinto, IJuego{
                     System.out.print(InterfazConsola.ROJO + 'M' + InterfazConsola.RESET);
                 }else if (i == medusa.getX() && j == medusa.getY()) {
                     System.out.print(InterfazConsola.ROJO + 'G' + InterfazConsola.RESET);
-                }else if (mapa[i][j]=='E') {
+                } else if (i == lernaean.getX() && j == lernaean.getY()) {
+                    System.out.print(InterfazConsola.ROJO + 'H' + InterfazConsola.RESET);
+                } else if (mapa[i][j]=='C') {
+                    System.out.print(InterfazConsola.ROJO + 'C' + InterfazConsola.RESET);
+                } else if (mapa[i][j]=='E') {
                     System.out.print(InterfazConsola.AZUL+'E'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='S') {
                     System.out.print(InterfazConsola.VERDE_CLARO+'S'+InterfazConsola.RESET);
                 } else if (mapa[i][j]=='█') {
                     System.out.print(InterfazConsola.GRIS+'█'+InterfazConsola.RESET);
-                } else if (mapa[i][j]=='C') {
-                    System.out.print(InterfazConsola.AMARILLO+'C'+InterfazConsola.RESET);
+                } else if (mapa[i][j]=='T') {
+                    System.out.print(InterfazConsola.AMARILLO+'T'+InterfazConsola.RESET);
                 } else {
                     System.out.print(mapa[i][j]);
                 }
@@ -625,6 +638,8 @@ public class Laverinto implements ILaberinto, IJuego{
                         writer.write('M');
                     } else if (i == medusa.getX() && j == medusa.getY()) {
                         writer.write('G');
+                    } else if (i == lernaean.getX() && j == lernaean.getY()) {
+                        writer.write('H');
                     } else {
                         writer.write(mapa[i][j]);
                     }
@@ -649,6 +664,29 @@ public class Laverinto implements ILaberinto, IJuego{
     private void hidra() {
         //hidra
         lernaean = new Hidra("lernaean", "enemigo",100,10,Tamanox +1,Tamanoy +1);
+    }
+    private void cabezas() {
+        //cabezas de la hidra
+        int numcabezas = totalcabezas;
+
+        for (int i = 0; i < numcabezas; i++) {
+            boolean CabezaValido = false;
+            while (!CabezaValido) {
+                int newX = rand.nextInt(Tamanox);
+                int newY = rand.nextInt(Tamanoy);
+
+                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+                int entrada = mapa[0][1];
+
+                if (mapa[newX][newY] !='█' && distancia >= 10 && mapa[newX][newY] != entrada  && !(newX == jugador.getX() && newY == jugador.getY())) {
+                    Cabezas nuevacabeza = new Cabezas("cabeza","enemigo",100,10,newX,newY);
+                    cabeza.add(nuevacabeza);
+                    mapa[newX][newY] = 'C';
+
+                    CabezaValido = true;
+                }
+            }
+        }
     }
     private void dificultad(){
         int vid = 150;
@@ -694,34 +732,11 @@ public class Laverinto implements ILaberinto, IJuego{
         }
 
         if (lernaean.muertes <= 1) {
-            int totalcabezas = rand.nextInt(4)+1;
+            totalcabezas = rand.nextInt(4)+1;
         } else {
-            int totalcabezas = (rand.nextInt(2)+1) * lernaean.muertes;
+            totalcabezas = (rand.nextInt(2)+1) * lernaean.muertes;
         }
 
-    }
-    private void cabezas() {
-        cabeza.clear();
-        int numcabezas = totalcabezas;
-
-        for (int i = 0; i < numcabezas; i++) {
-            boolean CabezaValido = false;
-            while (!CabezaValido) {
-                int newX = rand.nextInt(Tamanox);
-                int newY = rand.nextInt(Tamanoy);
-
-                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
-                int entrada = mapa[0][1];
-
-                if (mapa[newX][newY] !='█' && distancia >= 10 && mapa[newX][newY] != entrada  && !(newX == jugador.getX() && newY == jugador.getY())) {
-                    Cabezas nuevacabeza = new Cabezas("cabeza","enemigo",100,10,newX,newY);
-                    cabeza.add(nuevacabeza);
-                    mapa[newX][newY] = 'C';
-
-                    CabezaValido = true;
-                }
-            }
-        }
     }
     private void Cofres() {
         tesoros.clear();
@@ -755,5 +770,6 @@ public class Laverinto implements ILaberinto, IJuego{
         medusa.setY(Tamanoy+1);
         lernaean.setX(Tamanox+1);
         lernaean.setY(Tamanoy+1);
+        cabeza.clear();
     }
 }
