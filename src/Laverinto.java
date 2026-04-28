@@ -18,10 +18,12 @@ public class Laverinto implements ILaberinto, IJuego{
     private final Jugador jugador;
     private Minotauro asterion;
     private Gorgona medusa;
+    private Hidra lernaean;
     private int nivel = 1;
     private boolean juego = true;
     private boolean primerJuego = true;
     private final List<Tesoro> tesoros = new ArrayList<>();
+    private final List<Cabezas> cabeza = new ArrayList<>();
     private static final int minpasos = 1;
     private static final int maxpasos = 9999;
 
@@ -44,6 +46,8 @@ public class Laverinto implements ILaberinto, IJuego{
         //iniciar enemigo
         minotauro();
         medusa();
+        hidra();
+        cabezas();
 
         //bucle de juego
         while(juego){
@@ -117,10 +121,11 @@ public class Laverinto implements ILaberinto, IJuego{
                 nivelActivo = false;
                 asterion.curar();
                 medusa.curar();
+                lernaean.curar();
                 continue;
             }
 
-            //ataque de enemigo (asterion)
+            //ataque de asterion
             if (jugador.getX() == asterion.getX() && jugador.getY() == asterion.getY()) {
                 interfaz.mostrarMensaje("asterion te a atacado");
 
@@ -209,6 +214,83 @@ public class Laverinto implements ILaberinto, IJuego{
             } else {
                 jugador.setEstatua(false);
             }
+
+            //ataque de lernaean
+            if (jugador.getX() == lernaean.getX() && jugador.getY() == lernaean.getY()) {
+                interfaz.mostrarMensaje("Lernaean te a atacado");
+
+                int danoRecibido = lernaean.getDano();
+                int danoHecho = jugador.getDano();
+
+                jugador.setVida(jugador.getVida() - danoRecibido);
+                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
+
+                lernaean.setVida(lernaean.getVida() - danoHecho);
+
+                if (jugador.estaVivo()) {
+                    //jugador sobrevive
+                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Lernaean.");
+                    interfaz.mostrarExito("has escapado con vida.");
+                    separar();
+                }else {
+                    //jugador muere
+                    interfaz.mostrarMensaje("Lernaean te ha devorado");
+                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
+                    guardarMapa();
+                    juego = false;
+                    return;
+                }
+
+                if (lernaean.getVida() == 0) {
+                    //lernaean muere
+                    lernaean.aumentarMuertes(1);
+                    interfaz.mostrarMensaje("Lernaean a muerto");
+                    dificultad();
+                    lernaean.setX(mapa.length + 1);
+                    lernaean.setY(mapa.length + 1);
+                }
+            }
+            //cabezas de lernaean
+            Iterator<Cabezas> itcabeza = cabeza.iterator();
+            while (itcabeza.hasNext()) {
+                Cabezas cabezas = itcabeza.next();
+                if (jugador.getX() == cabezas.getX() && jugador.getY() == cabezas.getY()) {
+                    interfaz.mostrarMensaje("Lernaean te a atacado");
+
+                    int danoRecibido = cabezas.getDano();
+                    int danoHecho = jugador.getDano();
+
+                    jugador.setVida(jugador.getVida() - danoRecibido);
+                    interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
+
+                    cabezas.setVida(cabezas.getVida() - danoHecho);
+
+                    if (jugador.estaVivo()) {
+                        //jugador sobrevive
+                        interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a la cabeza de Lernaean.");
+                        interfaz.mostrarExito("has escapado con vida.");
+                        separar();
+                    } else {
+                        //jugador muere
+                        interfaz.mostrarMensaje("Lernaean te ha devorado");
+                        interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
+                        interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
+                        guardarMapa();
+                        juego = false;
+                        return;
+                    }
+
+                    if (cabezas.getVida() == 0) {
+                        cabezas.aumentarMuertes(1);
+                        interfaz.mostrarMensaje("cabeza cortada");
+                        dificultad();
+                        mapa[cabezas.getX()][cabezas.getY()] = ' ';
+                        itcabeza.remove();
+                    }
+                }
+            }
+
             //encontrar cofre
             Iterator<Tesoro> itcofre = tesoros.iterator();
             while (itcofre.hasNext()) {
@@ -564,6 +646,10 @@ public class Laverinto implements ILaberinto, IJuego{
         //gorgona
         medusa = new Gorgona("Medusa", "enemigo", 100, 10, Tamanox +1, Tamanoy +1);
     }
+    private void hidra() {
+        //hidra
+        lernaean = new Hidra("lernaean", "enemigo",100,10,Tamanox +1,Tamanoy +1);
+    }
     private void dificultad(){
         int vid = 150;
         int dan = 10;
@@ -594,6 +680,48 @@ public class Laverinto implements ILaberinto, IJuego{
             muertesdan = medusa.muertes * dan;
             medusa.setDano(muertesdan);
         }
+
+        if (lernaean.muertes <= 1) {
+            muertesvid = vid;
+            lernaean.setVida(muertesvid);
+            muertesdan = dan;
+            lernaean.setDano(muertesdan);
+        }else  {
+            muertesvid = lernaean.muertes * vid;
+            lernaean.setVida(muertesvid);
+            muertesdan = lernaean.muertes * dan;
+            lernaean.setDano(muertesdan);
+        }
+
+        if (lernaean.muertes <= 1) {
+            int totalcabezas = rand.nextInt(4)+1;
+        } else {
+            int totalcabezas = (rand.nextInt(2)+1) * lernaean.muertes;
+        }
+
+    }
+    private void cabezas() {
+        cabeza.clear();
+        int numcabezas = totalcabezas;
+
+        for (int i = 0; i < numcabezas; i++) {
+            boolean CabezaValido = false;
+            while (!CabezaValido) {
+                int newX = rand.nextInt(Tamanox);
+                int newY = rand.nextInt(Tamanoy);
+
+                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
+                int entrada = mapa[0][1];
+
+                if (mapa[newX][newY] !='█' && distancia >= 10 && mapa[newX][newY] != entrada  && !(newX == jugador.getX() && newY == jugador.getY())) {
+                    Cabezas nuevacabeza = new Cabezas("cabeza","enemigo",100,10,newX,newY);
+                    cabeza.add(nuevacabeza);
+                    mapa[newX][newY] = 'C';
+
+                    CabezaValido = true;
+                }
+            }
+        }
     }
     private void Cofres() {
         tesoros.clear();
@@ -613,7 +741,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 if (mapa[newX][newY] != '█' && distancia >= 10 && mapa[newX][newY] != entrada && !(newX == jugador.getX() && newY == jugador.getY())) {
                     Tesoro nuevotesoro = new Tesoro("cofre", "Tesoro", 1, 0, newX,newY);
                     tesoros.add(nuevotesoro);
-                    mapa[newX][newY] = 'C';
+                    mapa[newX][newY] = 'T';
 
                     CofreValido = true;
                 }
@@ -625,5 +753,7 @@ public class Laverinto implements ILaberinto, IJuego{
         asterion.setY(Tamanoy+1);
         medusa.setX(Tamanox+1);
         medusa.setY(Tamanoy+1);
+        lernaean.setX(Tamanox+1);
+        lernaean.setY(Tamanoy+1);
     }
 }

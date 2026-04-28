@@ -2,19 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Gorgona extends Entidad{
+public class Hidra extends Entidad{
     private int x,y;
 
-    public Gorgona(String nombre, String Tipo, int vida, int dano, int starX, int starY){
+    public Hidra(String nombre, String tipo, int vida, int dano, int starX, int starY) {
 
-        super(nombre, Tipo, vida, dano);
+        super(nombre, tipo, vida, dano);
 
         this.x=starX;
         this.y=starY;
 
         this.vidaMax=vida;
     }
-
     public void mover(char[][] mapa, Random rand, int maxX, int maxY){
         int[] dx ={-1,0,1,0};
         int[] dy={0,1,0,-1};

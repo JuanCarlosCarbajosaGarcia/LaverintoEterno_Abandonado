@@ -1,8 +1,8 @@
 public class Tesoro extends Entidad{
     private int x,y;
 
-    public Tesoro(String nombre, String Tipo, int vida, int dano, int starX, int starY){
-        super(nombre, Tipo, vida, dano);
+    public Tesoro(String nombre, String tipo, int vida, int dano, int starX, int starY){
+        super(nombre, tipo, vida, dano);
         this.x=starX;
         this.y=starY;
     }

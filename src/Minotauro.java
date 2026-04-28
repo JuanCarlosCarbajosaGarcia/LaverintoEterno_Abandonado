@@ -11,6 +11,7 @@ public class Minotauro extends Entidad{
 
         this.x=starX;
         this.y=starY;
+
         this.vidaMax=vida;
     }
 
