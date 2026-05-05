@@ -1,40 +1,48 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Cabezas extends Entidad{
     private int x;
     private int y;
+    public static int totalcabezas;
+    public static final List<Cabezas> cabeza = new ArrayList<>();
 
     public Cabezas(String nombre, String tipo, int vida, int dano, int starX, int starY){
         super(nombre, tipo, vida, dano);
         this.x=starX;
         this.y=starY;
     }
-    public void mover(char[][] mapa, Random rand, int maxX, int maxY){
-        int[] dx ={-1,0,1,0};
-        int[] dy={0,1,0,-1};
 
+    public static void cabezas() {
+        cabeza.clear();
 
-        //moverse
-        List<Integer> movimiento = new ArrayList<>();
+        if (totalcabezas >20) {
+            totalcabezas = 20;
+        } else {
+            for (int numcabezas = 0; numcabezas < totalcabezas; numcabezas++) {
+                boolean CabezaValido = false;
+                while (!CabezaValido) {
+                    int newX = Laverinto.rand.nextInt(Laverinto.Tamanox);
+                    int newY = Laverinto.rand.nextInt(Laverinto.Tamanoy);
 
-        for(int i=0;i<4;i++){
-            int newX = x + dx[i];
-            int newY = y + dy[i];
+                    int distancia = Math.abs(newX - Laverinto.jugador.getX()) + Math.abs(newY - Laverinto.jugador.getY());
+                    int entrada = Laverinto.mapa[0][1];
 
-            if (newX >= 0 && newX < maxX && newY >= 0 && newY < maxY && mapa[newX][newY] != '█'){
-                movimiento.add(i);
+                    if (Laverinto.mapa[newX][newY] != '█' && distancia >= 10 && Laverinto.mapa[newX][newY] != entrada
+                            && !(newX == Laverinto.jugador.getX() && newY == Laverinto.jugador.getY())
+                            && Laverinto.mapa[newX][newY] != 'H'
+                            && Laverinto.mapa[newX][newY] != 'C'
+                            && Laverinto.mapa[newX][newY] != 'T') {
+                        Cabezas nuevacabeza = new Cabezas("cabeza", "enemigo", 20, 5, newX, newY);
+                        cabeza.add(nuevacabeza);
+                        Laverinto.mapa[newX][newY] = 'C';
+
+                        CabezaValido = true;
+                    }
+                }
             }
         }
-        //elegir una direcion valida al azar
-        if(!movimiento.isEmpty()){
-            int dir = movimiento.get(rand.nextInt(movimiento.size()));
-            x += dx[dir];
-            y += dy[dir];
-        }
     }
-
     public int getX() {
         return x;
     }

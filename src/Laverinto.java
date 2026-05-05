@@ -4,27 +4,25 @@ import java.io.IOException;
 import java.util.*;
 
 public class Laverinto implements ILaberinto, IJuego{
-    private static final int Tamanox = 15;
-    private static final int Tamanoy = 30;
+    protected static final int Tamanox = 15;
+    protected static final int Tamanoy = 30;
     private static final int Max_intentos = 100;
 
-    private final char[][] mapa = new char[Tamanox][Tamanoy];
-    private final Random rand = new Random(System.currentTimeMillis());
+    public static final char[][] mapa = new char[Tamanox][Tamanoy];
+    public static final Random rand = new Random(System.currentTimeMillis());
     private final Random enemigos = new Random();
     private final Scanner laverintosc = new Scanner(System.in);
+    static boolean nivelActivo = true;
 
-    private final IInterfaz interfaz = new InterfazConsola();
+    public static final IInterfaz interfaz = new InterfazConsola();
 
-    private final Jugador jugador;
-    private Minotauro asterion;
-    private Gorgona medusa;
-    private Hidra lernaean;
-    private int nivel = 1;
+    public static Jugador jugador;
+    public static Minotauro asterion;
+    public static Gorgona medusa;
+    public static Hidra lernaean;
+    public static int nivel = 1;
     private boolean juego = true;
-    private boolean primerJuego = true;
-    private final List<Tesoro> tesoros = new ArrayList<>();
-    private final List<Cabezas> cabeza = new ArrayList<>();
-    private int totalcabezas;
+    private static boolean primerJuego = true;
     private static final int minpasos = 1;
     private static final int maxpasos = 9999;
 
@@ -81,14 +79,13 @@ public class Laverinto implements ILaberinto, IJuego{
         colocarEnemigos();
 
         //colocar los cofres minimo 1
-        Cofres();
+        Tesoro.Cofres();
 
         //resetear jugador
         jugador.setX(0);
         jugador.setY(1);
 
         //bucle del nivel
-        boolean nivelActivo = true;
 
         while (nivelActivo && juego) {
             interfaz.limpiarPantalla();
@@ -96,228 +93,7 @@ public class Laverinto implements ILaberinto, IJuego{
             mostrarMapa();
             interfaz.mostrarInfo(nivel, jugador.getVida(), jugador.getVidaMax(), jugador.getOro(), jugador.getDano());
 
-            //termino el nivel el jugador
-            if (mapa[jugador.getX()][jugador.getY()] == 'S') {
-                interfaz.mostrarExito("¡Felicidades! Sobreviviste el nivel " + nivel);
-                nivel++;
-                Random num = new Random();
-                int premio = num.nextInt(5) + 1;
-                jugador.setOro(jugador.getOro() + premio);
-                interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "Ganaste: " + premio + " de Oro" + InterfazConsola.RESET);
-
-                guardarMapa();
-                resetEnemigos();
-
-                //ir al vendedor
-                Vendedor vendedor = new Vendedor(nivel);
-                boolean volveraMenu = vendedor.mostrarTienda(jugador);
-
-                if (volveraMenu) {
-                    interfaz.mostrarMensaje("voviendo al menu principal");
-                    juego = false;
-                    return;
-                }
-
-                nivelActivo = false;
-                asterion.curar();
-                medusa.curar();
-                lernaean.curar();
-                continue;
-            }
-
-            //ataque de asterion
-            if (jugador.getX() == asterion.getX() && jugador.getY() == asterion.getY()) {
-                interfaz.mostrarMensaje("asterion te a atacado");
-
-                int danoRecibido = asterion.getDano();
-                int danoHecho = jugador.getDano();
-
-                jugador.setVida(jugador.getVida() - danoRecibido);
-                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
-
-                asterion.setVida(asterion.getVida() - danoHecho);
-
-                if (jugador.estaVivo()) {
-                    //jugador sobrevive
-                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Asterion.");
-                    interfaz.mostrarExito("has escapado con vida.");
-                    separar();
-                } else {
-                    //jugador muere
-                    interfaz.mostrarError("Asterion te ha devorado");
-                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
-                    guardarMapa();
-                    juego = false;
-                    return;
-                }
-
-                if (asterion.getVida() == 0) {
-                    //asterion muere
-                    asterion.aumentarMuertes(1);
-                    interfaz.mostrarMensaje("Asterion a muerto");
-                    dificultad();
-                    asterion.setX(mapa.length + 1);
-                    asterion.setY(mapa.length + 1);
-                }
-            }
-            //berserker asterion
-            if (asterion.vida <= (asterion.vidaMax/4)){
-                asterion.setDano(asterion.dano*2);
-                System.out.println("Asterion se ha enfurecido");
-            }
-
-            //ataque de medusa
-            if (jugador.getX() == medusa.getX() && jugador.getY() == medusa.getY()) {
-                interfaz.mostrarMensaje("Medusa te a atacado");
-
-                int danoRecibido = medusa.getDano();
-                int danoHecho = jugador.getDano();
-
-                jugador.setVida(jugador.getVida() - danoRecibido);
-                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
-
-                medusa.setVida((medusa.getVida() - danoHecho));
-
-                if (jugador.estaVivo()) {
-                    //jugador sobrevive
-                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Medusa.");
-                    interfaz.mostrarExito("has escapado con vida.");
-                    separar();
-                }else {
-                    //jugador muere
-                    interfaz.mostrarMensaje("Medusa te ha petrificado");
-                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
-                    guardarMapa();
-                    juego = false;
-                    return;
-                }
-
-                if (medusa.getVida() == 0) {
-                    //medusa muere
-                    medusa.aumentarMuertes(1);
-                    interfaz.mostrarMensaje("Medusa a muerto");
-                    dificultad();
-                    medusa.setX(mapa.length + 1);
-                    medusa.setY(mapa.length + 1);
-                }
-            }
-            //proximidad de medusa
-            double distamcia = Math.sqrt(
-                    Math.pow(jugador.getX() - medusa.getX(), 2) +
-                    Math.pow(jugador.getY() - medusa.getY(), 2)
-            );
-
-            if (distamcia <= 1.5){
-                jugador.setEstatua(true);
-            } else {
-                jugador.setEstatua(false);
-            }
-
-            //ataque de lernaean
-            if (jugador.getX() == lernaean.getX() && jugador.getY() == lernaean.getY()) {
-                interfaz.mostrarMensaje("Lernaean te a atacado");
-
-                int danoRecibido = lernaean.getDano();
-                int danoHecho = jugador.getDano();
-
-                jugador.setVida(jugador.getVida() - danoRecibido);
-                interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
-
-                lernaean.setVida(lernaean.getVida() - danoHecho);
-
-                if (jugador.estaVivo()) {
-                    //jugador sobrevive
-                    interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a Lernaean.");
-                    interfaz.mostrarExito("has escapado con vida.");
-                    separar();
-                }else {
-                    //jugador muere
-                    interfaz.mostrarMensaje("Lernaean te ha devorado");
-                    interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
-                    guardarMapa();
-                    juego = false;
-                    return;
-                }
-
-                if (lernaean.getVida() == 0) {
-                    //lernaean muere
-                    lernaean.aumentarMuertes(1);
-                    interfaz.mostrarMensaje("Lernaean a muerto");
-                    dificultad();
-                    lernaean.setX(mapa.length + 1);
-                    lernaean.setY(mapa.length + 1);
-                }
-            }
-            //cabezas de lernaean
-            Iterator<Cabezas> itcabeza = cabeza.iterator();
-            while (itcabeza.hasNext()) {
-                Cabezas cabezas = itcabeza.next();
-                if (jugador.getX() == cabezas.getX() && jugador.getY() == cabezas.getY()) {
-                    interfaz.mostrarMensaje("Lernaean te a atacado");
-
-                    int danoRecibido = cabezas.getDano();
-                    int danoHecho = jugador.getDano();
-
-                    jugador.setVida(jugador.getVida() - danoRecibido);
-                    interfaz.mostrarMensaje("reciviste " + danoRecibido + " de daño.");
-
-                    cabezas.setVida(cabezas.getVida() - danoHecho);
-
-                    if (jugador.estaVivo()) {
-                        //jugador sobrevive
-                        interfaz.mostrarMensaje("le hiciste " + danoHecho + " de daño a la cabeza de Lernaean.");
-                        interfaz.mostrarExito("has escapado con vida.");
-                        separar();
-                    } else {
-                        //jugador muere
-                        interfaz.mostrarMensaje("Lernaean te ha devorado");
-                        interfaz.mostrarMensaje("alcanzaste el nivel: " + nivel);
-                        interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "oro total: " + jugador.getOro() + InterfazConsola.RESET);
-                        guardarMapa();
-                        juego = false;
-                        return;
-                    }
-
-                    if (cabezas.getVida() == 0) {
-                        interfaz.mostrarMensaje("cabeza cortada");
-                        dificultad();
-                        mapa[cabezas.getX()][cabezas.getY()] = ' ';
-                        itcabeza.remove();
-                        totalcabezas++;
-                    }
-                }
-            }
-
-            //encontrar cofre
-            Iterator<Tesoro> itcofre = tesoros.iterator();
-            while (itcofre.hasNext()) {
-                Tesoro tesoro = itcofre.next();
-                if (jugador.getX() == tesoro.getX() && jugador.getY() == tesoro.getY()) {
-                    interfaz.mostrarMensaje("Has encontrado un cofre");
-                    Random num = new Random();
-                    int premio = num.nextInt(10) + 1;
-                    jugador.setOro(jugador.getOro() + premio);
-                    interfaz.mostrarMensaje(InterfazConsola.AMARILLO + "Encontraste: " + premio + " de Oro" + InterfazConsola.RESET);
-
-                    mapa[tesoro.getX()][tesoro.getY()] = ' ';
-                    itcofre.remove();
-                }
-            }
-            //movimiento jugador
-            boolean salirJuego = jugador.mover(mapa, laverintosc);
-            if (salirJuego) {
-                interfaz.mostrarMensaje("volviendo al menu principal.....");
-                juego = false;
-                return;
-            }
-
-            //movimiento asterion
-            asterion.mover(mapa, rand, mapa.length, mapa[0].length);
-            //Movimiento Medusa
-            medusa.mover(mapa, rand, mapa.length, mapa[0].length);
+            Mecanicas.terminarNivel();
         }
     }
     @Override
@@ -328,12 +104,6 @@ public class Laverinto implements ILaberinto, IJuego{
     @Override
     public void terminarJuego() {
         juego = false;
-    }
-
-    private void separar(){
-                jugador.setX(0);
-                jugador.setY(1);
-                mostrarMapa();
     }
 
     private void colocarEnemigos(){
@@ -360,7 +130,7 @@ public class Laverinto implements ILaberinto, IJuego{
                         case 3:
                                 lernaean.setX(newX);
                                 lernaean.setY(newY);
-                                cabezas();
+                                Cabezas.cabezas();
                         break;
                     }
                     posicionValida = true;
@@ -589,7 +359,6 @@ public class Laverinto implements ILaberinto, IJuego{
 
     @Override
     public void mostrarMenu(){
-
     }
 
     @Override
@@ -607,7 +376,7 @@ public class Laverinto implements ILaberinto, IJuego{
         return new int[]{Tamanox -1,1};
     }
 
-    private void guardarMapa(){
+    public static void guardarMapa(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(jugador.nombre+"_Mapa.txt", !primerJuego))){
             //encabezado del archivo
             if(primerJuego){
@@ -658,119 +427,15 @@ public class Laverinto implements ILaberinto, IJuego{
     private void hidra() {
         //hidra
         lernaean = new Hidra("lernaean", "enemigo",100,10,Tamanox +1,Tamanoy +1);
-        totalcabezas = rand.nextInt(4)+1;
+        Cabezas.totalcabezas = rand.nextInt(4)+1;
     }
-    private void dificultad(){
-        int vid = 150;
-        int dan = 10;
-
-        int muertesvid;
-        int muertesdan;
-
-        if (asterion.muertes <= 1) {
-            muertesvid = vid;
-            asterion.setVida(muertesvid);
-            muertesdan = dan;
-            asterion.setDano(muertesdan);
-        } else {
-            muertesvid = asterion.muertes * vid;
-            asterion.setVida(muertesvid);
-            muertesdan = asterion.muertes * dan;
-            asterion.setDano(muertesdan);
-        }
-
-        if (medusa.muertes <= 1) {
-            muertesvid = vid;
-            medusa.setVida(muertesvid);
-            muertesdan = dan;
-            medusa.setDano(muertesdan);
-        } else {
-            muertesvid = medusa.muertes * vid;
-            medusa.setVida(muertesvid);
-            muertesdan = medusa.muertes * dan;
-            medusa.setDano(muertesdan);
-        }
-
-        if (lernaean.muertes <= 1) {
-            muertesvid = vid;
-            lernaean.setVida(muertesvid);
-            muertesdan = dan;
-            lernaean.setDano(muertesdan);
-        }else  {
-            muertesvid = lernaean.muertes * vid;
-            lernaean.setVida(muertesvid);
-            muertesdan = lernaean.muertes * dan;
-            lernaean.setDano(muertesdan);
-        }
-        if (lernaean.muertes <= 1) {
-            totalcabezas = rand.nextInt(4)+1;
-        } else {
-            totalcabezas++;
-        }
-
-    }
-    private void cabezas() {
-        cabeza.clear();
-
-        if (totalcabezas >20) {
-            totalcabezas = 20;
-        } else {
-            for (int numcabezas = 0; numcabezas < totalcabezas; numcabezas++) {
-                boolean CabezaValido = false;
-                while (!CabezaValido) {
-                    int newX = rand.nextInt(Tamanox);
-                    int newY = rand.nextInt(Tamanoy);
-
-                    int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
-                    int entrada = mapa[0][1];
-
-                    if (mapa[newX][newY] != '█' && distancia >= 10 && mapa[newX][newY] != entrada
-                            && !(newX == jugador.getX() && newY == jugador.getY())
-                            && mapa[newX][newY] != 'H'
-                            && mapa[newX][newY] != 'C'
-                            && mapa[newX][newY] != 'T') {
-                        Cabezas nuevacabeza = new Cabezas("cabeza", "enemigo", 20, 5, newX, newY);
-                        cabeza.add(nuevacabeza);
-                        mapa[newX][newY] = 'C';
-
-                        CabezaValido = true;
-                    }
-                }
-            }
-        }
-    }
-    private void Cofres() {
-        tesoros.clear();
-        int numcofres = rand.nextInt(10)+1;
-
-        for (int i = 0; i < numcofres; i++) {
-            boolean CofreValido = false;
-
-            while (!CofreValido) {
-                int newX = rand.nextInt(Tamanox);
-                int newY = rand.nextInt(Tamanoy);
-
-                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
-                int entrada = mapa[0][1];
-
-                //verificar la posicion
-                if (mapa[newX][newY] != '█' && distancia >= 10 && mapa[newX][newY] != entrada && !(newX == jugador.getX() && newY == jugador.getY()) && mapa[newX][newY] != 'T') {
-                    Tesoro nuevotesoro = new Tesoro("cofre", "Tesoro", 1, 0, newX,newY);
-                    tesoros.add(nuevotesoro);
-                    mapa[newX][newY] = 'T';
-
-                    CofreValido = true;
-                }
-            }
-        }
-    }
-    private void resetEnemigos(){
+    public static void resetEnemigos(){
         asterion.setX(Tamanox+1);
         asterion.setY(Tamanoy+1);
         medusa.setX(Tamanox+1);
         medusa.setY(Tamanoy+1);
         lernaean.setX(Tamanox+1);
         lernaean.setY(Tamanoy+1);
-        cabeza.clear();
+        Cabezas.cabeza.clear();
     }
 }

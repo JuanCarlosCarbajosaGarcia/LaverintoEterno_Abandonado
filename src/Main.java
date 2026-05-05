@@ -1,9 +1,9 @@
 static Scanner mainsc = new Scanner(System.in);
 static boolean juegoA = true;
-static IInterfaz interfaz = new InterfazConsola();
+
 
 void main() {
-    interfaz.mostrarBienvenida();
+    Laverinto.interfaz.mostrarBienvenida();
     mostrarControles();
     mostrarMenu();
 }
@@ -11,7 +11,7 @@ void main() {
 static void mostrarMenu() {
     while (juegoA) {
 
-        interfaz.mostrarMenu();
+        Laverinto.interfaz.mostrarMenu();
 
         try{
             int opcion = mainsc.nextInt();
@@ -29,11 +29,11 @@ static void mostrarMenu() {
                     System.exit(0);
                     break;
                 default:
-                    interfaz.mostrarError("opcion invalida");
-                    interfaz.mostrarMenu();
+                    Laverinto.interfaz.mostrarError("opcion invalida");
+                    Laverinto.interfaz.mostrarMenu();
             }
         }catch (Exception e){
-            interfaz.mostrarError("introduce una opcion valida");
+            Laverinto.interfaz.mostrarError("introduce una opcion valida");
             mainsc.nextLine();
         }
     }
@@ -44,9 +44,9 @@ static void iniciarJuego() {
 }
 
 static void mostrarControles() {
-    interfaz.mostrarControles();
+    Laverinto.interfaz.mostrarControles();
 }
 
 static void mostrarSalida() {
-    interfaz.mostrarSalida();
+    Laverinto.interfaz.mostrarSalida();
 }
