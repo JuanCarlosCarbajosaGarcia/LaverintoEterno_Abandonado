@@ -56,12 +56,15 @@ public class Jugador extends Entidad{
                     return false;
             }
         }else {
+            if (menu.equals("q")) {
+                return true;
+            }
             System.out.println("estas petrificado");
             return false;
         }
 
         //asegurarse de que el movimiento es posible
-        if (newX >= 0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newX][newY] != '#'){
+        if (newX >= 0 && newX < mapa.length && newY >= 0 && newY < mapa[0].length && mapa[newX][newY] != '█'){
             x = newX;
             y = newY;
         }else {

@@ -27,7 +27,7 @@ public class Gorgona extends Entidad{
             int newX = x + dx[i];
             int newY = y + dy[i];
 
-            if (newX >= 0 && newX < maxX && newY >= 0 && newY < maxY && mapa[newX][newY] != '#'){
+            if (newX >= 0 && newX < maxX && newY >= 0 && newY < maxY && mapa[newX][newY] != '█'){
                 movimiento.add(i);
             }
         }
