@@ -30,14 +30,14 @@ public class Tesoro extends Entidad{
                 int newX = Laverinto.rand.nextInt(Laverinto.Tamanox);
                 int newY = Laverinto.rand.nextInt(Laverinto.Tamanoy);
 
-                int distancia = Math.abs(newX - jugador.getX()) + Math.abs(newY - jugador.getY());
-                int entrada = mapa[0][1];
+                int distancia = Math.abs(newX - Laverinto.jugador.getX()) + Math.abs(newY - Laverinto.jugador.getY());
+                int entrada = Laverinto.mapa[0][1];
 
                 //verificar la posicion
-                if (mapa[newX][newY] != '█' && distancia >= 10 && mapa[newX][newY] != entrada && !(newX == jugador.getX() && newY == jugador.getY()) && mapa[newX][newY] != 'T') {
+                if (Laverinto.mapa[newX][newY] != '█' && distancia >= 10 && Laverinto.mapa[newX][newY] != entrada && !(newX == Laverinto.jugador.getX() && newY == Laverinto.jugador.getY()) && Laverinto.mapa[newX][newY] != 'T') {
                     Tesoro nuevotesoro = new Tesoro("cofre", "Tesoro", 1, 0, newX,newY);
                     tesoros.add(nuevotesoro);
-                    mapa[newX][newY] = 'T';
+                    Laverinto.mapa[newX][newY] = 'T';
 
                     CofreValido = true;
                 }
