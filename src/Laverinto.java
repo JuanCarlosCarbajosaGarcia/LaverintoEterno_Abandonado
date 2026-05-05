@@ -11,7 +11,7 @@ public class Laverinto implements ILaberinto, IJuego{
     public static final char[][] mapa = new char[Tamanox][Tamanoy];
     public static final Random rand = new Random(System.currentTimeMillis());
     private final Random enemigos = new Random();
-    private final Scanner laverintosc = new Scanner(System.in);
+    public static final Scanner laverintosc = new Scanner(System.in);
     static boolean nivelActivo = true;
 
     public static final IInterfaz interfaz = new InterfazConsola();
@@ -21,7 +21,7 @@ public class Laverinto implements ILaberinto, IJuego{
     public static Gorgona medusa;
     public static Hidra lernaean;
     public static int nivel = 1;
-    private boolean juego = true;
+    public static boolean juego = true;
     private static boolean primerJuego = true;
     private static final int minpasos = 1;
     private static final int maxpasos = 9999;
@@ -92,6 +92,7 @@ public class Laverinto implements ILaberinto, IJuego{
 
             mostrarMapa();
             interfaz.mostrarInfo(nivel, jugador.getVida(), jugador.getVidaMax(), jugador.getOro(), jugador.getDano());
+            Mecanicas.ataque();
 
             Mecanicas.terminarNivel();
         }
@@ -326,8 +327,7 @@ public class Laverinto implements ILaberinto, IJuego{
         return contarPasos() != -1;
     }
 
-    @Override
-    public void mostrarMapa(){
+    public static void mostrarMapa(){
         System.out.println("\n"+ InterfazConsola.CIAN+"Mapa del laverinto:");
         for(int i = 0; i < Tamanox; i++){
             for(int j = 0; j < Tamanoy; j++){

@@ -1,7 +1,7 @@
 public interface ILaberinto {
     void generarMapa();
     boolean esPosible();
-    void mostrarMapa();
+    static void mostrarMapa() {}
     char[][] getMapa();
     int[] getEntrada();
     int[] getSalida();
