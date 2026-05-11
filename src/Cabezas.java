@@ -5,6 +5,7 @@ public class Cabezas extends Entidad{
     private int x;
     private int y;
     public static int totalcabezas;
+    public static int cabezascortadas;
     public static final List<Cabezas> cabeza = new ArrayList<>();
 
     public Cabezas(String nombre, String tipo, int vida, int dano, int starX, int starY){

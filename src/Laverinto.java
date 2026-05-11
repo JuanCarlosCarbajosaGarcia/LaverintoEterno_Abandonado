@@ -22,6 +22,7 @@ public class Laverinto implements ILaberinto, IJuego{
     public static Hidra lernaean;
     public static int nivel = 1;
     public static boolean juego = true;
+    public static int activo = 0;
     private static boolean primerJuego = true;
     private static final int minpasos = 1;
     private static final int maxpasos = 9999;
@@ -64,7 +65,7 @@ public class Laverinto implements ILaberinto, IJuego{
         do {
             generarMapa();
             int pasos=contarPasos();
-            posible = esPosible() && pasos >= minpasos && pasos <= maxpasos;
+            posible = (pasos >= minpasos && pasos <= maxpasos);
             intentos++;
 
         } while (!posible && intentos < Max_intentos);
@@ -84,6 +85,7 @@ public class Laverinto implements ILaberinto, IJuego{
         //resetear jugador
         jugador.setX(0);
         jugador.setY(1);
+        nivelActivo = true;
 
         //bucle del nivel
 
@@ -93,6 +95,8 @@ public class Laverinto implements ILaberinto, IJuego{
             mostrarMapa();
             interfaz.mostrarInfo(nivel, jugador.getVida(), jugador.getVidaMax(), jugador.getOro(), jugador.getDano());
             Mecanicas.ataque();
+            Mecanicas.Tesoros();
+            Mecanicas.movimiento();
 
             Mecanicas.terminarNivel();
         }
@@ -123,14 +127,17 @@ public class Laverinto implements ILaberinto, IJuego{
                         case 1:
                                 asterion.setX(newX);
                                 asterion.setY(newY);
+                                activo=1;
                         break;
                         case 2:
                                 medusa.setX(newX);
                                 medusa.setY(newY);
+                                activo=2;
                         break;
                         case 3:
                                 lernaean.setX(newX);
                                 lernaean.setY(newY);
+                                activo=3;
                                 Cabezas.cabezas();
                         break;
                     }
@@ -224,7 +231,7 @@ public class Laverinto implements ILaberinto, IJuego{
         Set<String> celVisi = new HashSet<>();
         for (int i = 1; i < Tamanox-2; i++) {
                 if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
-                    if (rand.nextDouble() < 0.8){
+                    if (rand.nextDouble() < 0.4){
                         caminoR(i,1,celVisi);
                     }
                 }
@@ -295,13 +302,14 @@ public class Laverinto implements ILaberinto, IJuego{
         cola.add(new int[]{0,1});
         visi[0][1] = true;
         int pasos = 0;
+        int acceso = 1;
         int[] dx = {-1,0,1,0}, dy = {0,1,0,-1};
 
         while (!cola.isEmpty()) {
             int size = cola.size();
             for (int i = 0; i < size; i++) {
                 int[] actual = cola.poll();
-                assert actual != null;
+                if(actual==null) continue;
                 int x = actual[0], y = actual[1];
 
                 if (x==Tamanox-1 && y==1){
@@ -314,12 +322,17 @@ public class Laverinto implements ILaberinto, IJuego{
                     if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy && mapa[nx][ny] != '█' && !visi[nx][ny]){
                         visi[nx][ny] = true;
                         cola.add(new int[]{nx,ny});
+                        acceso++;
                     }
                 }
             }
             pasos++;
         }
-        return -1;
+        int totalCeldas = Tamanox*Tamanoy;
+        int paredes = (int)(totalCeldas*0.8);
+        if (acceso < (totalCeldas-paredes - minpasos))return -1;
+
+        return pasos;
     }
 
     @Override

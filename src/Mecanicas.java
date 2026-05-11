@@ -1,7 +1,66 @@
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public class Mecanicas {
+    private static int x;
+    private static int y;
+
+    public static void movimiento() {
+        //movimiento jugador
+        boolean salirJuego = Laverinto.jugador.mover(Laverinto.mapa, Laverinto.laverintosc);
+        if (salirJuego) {
+            Laverinto.interfaz.mostrarMensaje("volviendo al menu principal.....");
+            Laverinto.juego = false;
+            return;
+        }
+        //movimiento de los enemigos
+        if (Laverinto.activo == 1){
+            Mecanicas.x = Laverinto.asterion.getX();
+            Mecanicas.y = Laverinto.asterion.getY();
+            Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
+            Laverinto.asterion.setX(Mecanicas.x);
+            Laverinto.asterion.setY(Mecanicas.y);
+        }if (Laverinto.activo == 2){
+            Mecanicas.x = Laverinto.medusa.getX();
+            Mecanicas.y = Laverinto.medusa.getY();
+            Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
+            Laverinto.medusa.setX(Mecanicas.x);
+            Laverinto.medusa.setY(Mecanicas.y);
+        }if (Laverinto.activo == 3){
+            for (Cabezas cabeza : Cabezas.cabeza) {
+                Mecanicas.x = cabeza.getX();
+                Mecanicas.y = cabeza.getY();
+                Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
+                cabeza.setX(Mecanicas.x);
+                cabeza.setY(Mecanicas.y);
+            }
+        }
+    }
+    public static void mover(char[][] mapa, Random rand, int maxX, int maxY){
+        int[] dx ={-1,0,1,0};
+        int[] dy={0,1,0,-1};
+
+
+        //moverse
+        List<Integer> movimiento = new ArrayList<>();
+
+        for(int i=0;i<4;i++){
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+
+            if (newX >= 0 && newX < maxX && newY >= 0 && newY < maxY && mapa[newX][newY] != '█'){
+                movimiento.add(i);
+            }
+        }
+        //elegir una direcion valida al azar
+        if(!movimiento.isEmpty()){
+            int dir = movimiento.get(rand.nextInt(movimiento.size()));
+            x += dx[dir];
+            y += dy[dir];
+        }
+    }
 
     public  static void ataque() {
         //ataque de asterion
@@ -165,11 +224,13 @@ public class Mecanicas {
                     Mecanicas.dificultad();
                     Laverinto.mapa[cabezas.getX()][cabezas.getY()] = ' ';
                     itcabeza.remove();
-                    Cabezas.totalcabezas++;
+                    Cabezas.cabezascortadas++;
                 }
             }
         }
+    }
 
+    public static void Tesoros(){
         //encontrar cofre
         Iterator<Tesoro> itcofre = Tesoro.tesoros.iterator();
         while (itcofre.hasNext()) {
@@ -185,19 +246,6 @@ public class Mecanicas {
                 itcofre.remove();
             }
         }
-        //movimiento jugador
-        boolean salirJuego = Laverinto.jugador.mover(Laverinto.mapa, Laverinto.laverintosc);
-        if (salirJuego) {
-            Laverinto.interfaz.mostrarMensaje("volviendo al menu principal.....");
-            Laverinto.juego = false;
-            return;
-        }
-
-        //movimiento asterion
-        Laverinto.asterion.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
-        //Movimiento Medusa
-        Laverinto.medusa.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
-
     }
 
     public static void separar(){
@@ -252,6 +300,7 @@ public class Mecanicas {
             Cabezas.totalcabezas = Laverinto.rand.nextInt(4)+1;
         } else {
             Cabezas.totalcabezas++;
+            Cabezas.totalcabezas = Cabezas.totalcabezas+Cabezas.cabezascortadas;
         }
     }
     public static void terminarNivel(){
@@ -266,6 +315,11 @@ public class Mecanicas {
 
             Laverinto.guardarMapa();
             Laverinto.resetEnemigos();
+            Laverinto.nivelActivo = false;
+            Laverinto.asterion.curar();
+            Laverinto.medusa.curar();
+            Laverinto.lernaean.curar();
+            Laverinto.activo=0;
 
             //ir al vendedor
             Vendedor vendedor = new Vendedor(Laverinto.nivel);
@@ -274,13 +328,7 @@ public class Mecanicas {
             if (volveraMenu) {
                 Laverinto.interfaz.mostrarMensaje("voviendo al menu principal");
                 Laverinto.juego = false;
-                return;
             }
-
-            Laverinto.nivelActivo = false;
-            Laverinto.asterion.curar();
-            Laverinto.medusa.curar();
-            Laverinto.lernaean.curar();
         }
     }
 }
