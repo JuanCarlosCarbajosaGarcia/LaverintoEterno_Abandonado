@@ -28,6 +28,11 @@ public class Laverinto implements ILaberinto, IJuego{
     private static final int maxpasos = 9999;
 
     public Laverinto(){
+        //iniciar enemigos
+        minotauro();
+        medusa();
+        hidra();
+
         interfaz.mostrarMensaje("=== BIEMVENIDO AL LAVERINTO ETERNO ===");
         //nombre del jugador
         String nombre = interfaz.pedirLinea("ingrese el nombre del jugador: ");
@@ -43,10 +48,6 @@ public class Laverinto implements ILaberinto, IJuego{
         jugador.setOro(0);
         jugador.setEstatua(false);
 
-        //iniciar enemigo
-        minotauro();
-        medusa();
-        hidra();
 
         //bucle de juego
         while(juego){
@@ -59,19 +60,20 @@ public class Laverinto implements ILaberinto, IJuego{
         interfaz.mostrarMensaje("\n=== INICIANDO NIVEL " + nivel + " ===");
 
         //generar laverinto
-        boolean posible;
+        boolean posible = false;
         int intentos = 0;
 
-        do {
+        while (!posible && intentos < Max_intentos) {
             generarMapa();
-            int pasos=contarPasos();
-            posible = (pasos >= minpasos && pasos <= maxpasos);
+            int pasos = contarPasos();
+            if (pasos >= minpasos && pasos <= maxpasos){
+                posible = esPosible();
+            }
             intentos++;
+        }
 
-        } while (!posible && intentos < Max_intentos);
-
-        if (!posible) {
-            caminoE();
+        if (!esPosible() && intentos < Max_intentos) {
+            System.out.println("error al generar nivel");
             return;
         }
 
@@ -149,7 +151,6 @@ public class Laverinto implements ILaberinto, IJuego{
     //generar el mapa
     public void generarMapa(){
         mapaB();
-        //caminoD();
         complejo();
         mapaF();
     }
@@ -172,6 +173,22 @@ public class Laverinto implements ILaberinto, IJuego{
         }
         mapa[0][1] = 'E'; //entrada
         mapa[Tamanox - 1][1]= 'S'; //salida
+    }
+
+    //generar el camino principal
+    private void caminoP(){
+        int x=0, y=1;
+        mapa[x][y]='E';
+
+        while (x < Tamanox - 2){
+            mapa[x][y] = ' ';
+            x += rand.nextInt(2)+1;
+            if (x < Tamanox - 1){
+                mapa[x][y] = ' ';
+            }
+        }
+        mapa[Tamanox-1][1] ='S';
+        mapa[Tamanox-2][1] =' ';
     }
 
     //generar el camino
@@ -204,38 +221,12 @@ public class Laverinto implements ILaberinto, IJuego{
         }
     }
 
-    //generar el camino
-    private void caminoP(){
-        int x=0, y=1;
-        mapa[x][y]='E';
-
-        while (x < Tamanox - 2){
-            mapa[x][y] = ' ';
-            x += rand.nextInt(2)+1;
-            if (x < Tamanox - 1){
-                mapa[x][y] = ' ';
-            }
-        }
-        mapa[Tamanox-1][1] ='S';
-        mapa[Tamanox-2][1] =' ';
-    }
-    //generar mas posibilidades
-
-    private void caminoE(){
+    //camino recto para testeo
+    public static void caminoE(){
         for (int i = 0; i < Tamanox; i++) {
             mapa[i][1] = ' ';
         }
-    }
-
-    private void complejo(){
-        Set<String> celVisi = new HashSet<>();
-        for (int i = 1; i < Tamanox-2; i++) {
-                if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
-                    if (rand.nextDouble() < 0.4){
-                        caminoR(i,1,celVisi);
-                    }
-                }
-        }
+        mapa[Tamanox-1][1] ='S';
     }
 
     private void caminoR(int x, int y, Set<String> Visi){
@@ -271,6 +262,19 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
             contador++;
+        }
+    }
+
+    //generar mas posibilidades
+
+    private void complejo(){
+        Set<String> celVisi = new HashSet<>();
+        for (int i = 1; i < Tamanox-2; i++) {
+            if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
+                if (rand.nextDouble() < 0.4){
+                    caminoR(i,1,celVisi);
+                }
+            }
         }
     }
 
@@ -312,7 +316,7 @@ public class Laverinto implements ILaberinto, IJuego{
                 if(actual==null) continue;
                 int x = actual[0], y = actual[1];
 
-                if (x==Tamanox-1 && y==1){
+                if (x==Tamanox-1 && y==Tamanoy-1){
                     return pasos;
                 }
                 for (int d = 0; d < 4; d++){
@@ -330,7 +334,7 @@ public class Laverinto implements ILaberinto, IJuego{
         }
         int totalCeldas = Tamanox*Tamanoy;
         int paredes = (int)(totalCeldas*0.8);
-        if (acceso < (totalCeldas-paredes - minpasos))return -1;
+        if (acceso > (totalCeldas-paredes))return -1;
 
         return pasos;
     }

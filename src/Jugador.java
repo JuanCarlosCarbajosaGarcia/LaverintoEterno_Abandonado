@@ -34,7 +34,8 @@ public class Jugador extends Entidad{
                     while(menuDes) {
                         System.out.println("menu");
                         System.out.println("1: tienda");
-                        System.out.println("2: volver al juego");
+                        System.out.println("2: camino");
+                        System.out.println("3: volver al juego");
                         int menudes = jugadorsc.nextInt();
                         switch (menudes) {
                             case 1:
@@ -43,6 +44,9 @@ public class Jugador extends Entidad{
                                 if (volver) return true;
                                 break;
                             case 2:
+                                Laverinto.caminoE();
+                                break;
+                            case 3:
                                 menuDes = false;
                                 break;
                             default: System.out.println("movimiento invalido");

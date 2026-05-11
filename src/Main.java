@@ -4,7 +4,6 @@ static boolean juegoA = true;
 
 void main() {
     Laverinto.interfaz.mostrarBienvenida();
-    mostrarControles();
     mostrarMenu();
 }
 
@@ -26,7 +25,7 @@ static void mostrarMenu() {
                     break;
                 case 3:
                     mostrarSalida();
-                    System.exit(0);
+                    juegoA = false;
                     break;
                 default:
                     Laverinto.interfaz.mostrarError("opcion invalida");

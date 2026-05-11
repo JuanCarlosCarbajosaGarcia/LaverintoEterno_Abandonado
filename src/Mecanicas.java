@@ -17,18 +17,21 @@ public class Mecanicas {
         }
         //movimiento de los enemigos
         if (Laverinto.activo == 1){
+            //asterion
             Mecanicas.x = Laverinto.asterion.getX();
             Mecanicas.y = Laverinto.asterion.getY();
             Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
             Laverinto.asterion.setX(Mecanicas.x);
             Laverinto.asterion.setY(Mecanicas.y);
         }if (Laverinto.activo == 2){
+            //medusa
             Mecanicas.x = Laverinto.medusa.getX();
             Mecanicas.y = Laverinto.medusa.getY();
             Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
             Laverinto.medusa.setX(Mecanicas.x);
             Laverinto.medusa.setY(Mecanicas.y);
         }if (Laverinto.activo == 3){
+            //lerneae
             for (Cabezas cabeza : Cabezas.cabeza) {
                 Mecanicas.x = cabeza.getX();
                 Mecanicas.y = cabeza.getY();
