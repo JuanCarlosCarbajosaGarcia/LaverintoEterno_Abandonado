@@ -21,10 +21,10 @@ static void mostrarMenu() {
                     iniciarJuego();
                     break;
                 case 2:
-                    mostrarControles();
+                    Laverinto.interfaz.mostrarControles();
                     break;
                 case 3:
-                    mostrarSalida();
+                    Laverinto.interfaz.mostrarSalida();
                     juegoA = false;
                     break;
                 default:
@@ -39,13 +39,7 @@ static void mostrarMenu() {
 }
 
 static void iniciarJuego() {
+    Laverinto.juego=true;
+    Laverinto.nivelActivo=true;
     new Laverinto();
-}
-
-static void mostrarControles() {
-    Laverinto.interfaz.mostrarControles();
-}
-
-static void mostrarSalida() {
-    Laverinto.interfaz.mostrarSalida();
 }

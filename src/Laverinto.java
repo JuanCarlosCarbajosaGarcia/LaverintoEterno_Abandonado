@@ -60,23 +60,7 @@ public class Laverinto implements ILaberinto, IJuego{
         interfaz.mostrarMensaje("\n=== INICIANDO NIVEL " + nivel + " ===");
 
         //generar laverinto
-        boolean posible = false;
-        int intentos = 0;
-
-        while (!posible && intentos < Max_intentos) {
-            generarMapa();
-            int pasos = contarPasos();
-            if (pasos >= minpasos && pasos <= maxpasos){
-                posible = esPosible();
-            }
-            intentos++;
-        }
-
-        if (!esPosible() && intentos < Max_intentos) {
-            System.out.println("error al generar nivel");
-            return;
-        }
-
+        generarMapa();
 
         //colocar los enemigos del nivel
         colocarEnemigos();
@@ -96,9 +80,9 @@ public class Laverinto implements ILaberinto, IJuego{
 
             mostrarMapa();
             interfaz.mostrarInfo(nivel, jugador.getVida(), jugador.getVidaMax(), jugador.getOro(), jugador.getDano());
+            Mecanicas.movimiento();
             Mecanicas.ataque();
             Mecanicas.Tesoros();
-            Mecanicas.movimiento();
 
             Mecanicas.terminarNivel();
         }
@@ -127,20 +111,20 @@ public class Laverinto implements ILaberinto, IJuego{
                 if (mapa[newX][newY] != '█' && distancia >= 5 && mapa[newX][newY] != entrada) {
                     switch (enemigos.nextInt(3)+1) {
                         case 1:
-                                asterion.setX(newX);
-                                asterion.setY(newY);
-                                activo=1;
+                            activo=1;
+                            asterion.setX(newX);
+                            asterion.setY(newY);
                         break;
                         case 2:
-                                medusa.setX(newX);
-                                medusa.setY(newY);
-                                activo=2;
+                            activo=2;
+                            medusa.setX(newX);
+                            medusa.setY(newY);
                         break;
                         case 3:
-                                lernaean.setX(newX);
-                                lernaean.setY(newY);
-                                activo=3;
-                                Cabezas.cabezas();
+                            activo=3;
+                            lernaean.setX(newX);
+                            lernaean.setY(newY);
+                            Cabezas.cabezas();
                         break;
                     }
                     posicionValida = true;
@@ -150,9 +134,25 @@ public class Laverinto implements ILaberinto, IJuego{
 
     //generar el mapa
     public void generarMapa(){
-        mapaB();
-        complejo();
-        mapaF();
+        boolean posible = false;
+        int intentos = 0;
+
+        while (!posible && intentos < Max_intentos) {
+
+            mapaB();
+            complejo();
+            mapaF();
+
+            if (esPosible() && contarPasos() >= minpasos) {
+                posible = true;
+            }
+            intentos++;
+        }
+
+        if (!esPosible() && intentos < Max_intentos) {
+            System.out.println("error al generar nivel");
+            generarMapa();
+        }
     }
 
 
@@ -305,43 +305,82 @@ public class Laverinto implements ILaberinto, IJuego{
         Queue<int[]> cola = new LinkedList<>();
         cola.add(new int[]{0,1});
         visi[0][1] = true;
+
         int pasos = 0;
         int acceso = 1;
         int[] dx = {-1,0,1,0}, dy = {0,1,0,-1};
 
-        while (!cola.isEmpty()) {
+        while (!cola.isEmpty() && pasos < maxpasos) {
             int size = cola.size();
+            pasos ++;
+
             for (int i = 0; i < size; i++) {
                 int[] actual = cola.poll();
                 if(actual==null) continue;
+
                 int x = actual[0], y = actual[1];
 
-                if (x==Tamanox-1 && y==Tamanoy-1){
-                    return pasos;
-                }
                 for (int d = 0; d < 4; d++){
                     int nx = x + dx[d];
                     int ny = y + dy[d];
 
-                    if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy && mapa[nx][ny] != '█' && !visi[nx][ny]){
+                    if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy
+                            && !visi[nx][ny] && esCamino(nx,ny)) {
+
                         visi[nx][ny] = true;
                         cola.add(new int[]{nx,ny});
                         acceso++;
                     }
                 }
             }
-            pasos++;
         }
-        int totalCeldas = Tamanox*Tamanoy;
-        int paredes = (int)(totalCeldas*0.8);
-        if (acceso > (totalCeldas-paredes))return -1;
 
-        return pasos;
+        int accesoTotal = (Tamanox*Tamanoy)/5;
+        if (acceso< accesoTotal){
+            return 0;
+        }
+        return 1;
     }
 
     @Override
     public boolean esPosible(){
-        return contarPasos() != -1;
+        boolean[][] visi = new boolean[Tamanox][Tamanoy];
+        Queue<int[]> cola = new LinkedList<>();
+
+        cola.add(new int[]{0,1});
+        visi[0][1] = true;
+
+        int[] dx = {-1,0,1,0}, dy = {0,1,0,-1};
+
+        while (!cola.isEmpty()) {
+            int[] actual = cola.poll();
+            int x = actual[0], y = actual[1];
+
+            if (x==Tamanox-1 && y==Tamanoy-1){
+                return true;
+            }
+
+            for (int d = 0; d < 4; d++){
+                int nx = x + dx[d];
+                int ny = y + dy[d];
+
+                if (nx >= 0 && nx<Tamanox
+                        && ny >= 0 && ny< Tamanoy
+                        && !visi[nx][ny]
+                        && esCamino(nx,ny)){
+
+                    visi[nx][ny] = true;
+                    cola.add(new int[]{nx,ny});
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean esCamino(int x, int y){
+        char celda = mapa[x][y];
+        return celda == ' ' || celda == 'E' || celda == 'S';
     }
 
     public static void mostrarMapa(){
@@ -454,5 +493,6 @@ public class Laverinto implements ILaberinto, IJuego{
         lernaean.setX(Tamanox+1);
         lernaean.setY(Tamanoy+1);
         Cabezas.cabeza.clear();
+        activo=0;
     }
 }

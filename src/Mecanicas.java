@@ -33,11 +33,29 @@ public class Mecanicas {
         }if (Laverinto.activo == 3){
             //lerneae
             for (Cabezas cabeza : Cabezas.cabeza) {
+                int cabezavx = cabeza.getX();
+                int cabezavy = cabeza.getY();
+
+                if (cabezavx >= 0 && cabezavx < Laverinto.mapa.length
+                        && cabezavy >= 0 && cabezavy < Laverinto.mapa[0].length
+                        && Laverinto.mapa[cabezavx][cabezavy] == 'C'){
+                    Laverinto.mapa[cabezavx][cabezavy] = ' ';
+                }
+
                 Mecanicas.x = cabeza.getX();
                 Mecanicas.y = cabeza.getY();
                 Mecanicas.mover(Laverinto.mapa, Laverinto.rand, Laverinto.mapa.length, Laverinto.mapa[0].length);
+
                 cabeza.setX(Mecanicas.x);
                 cabeza.setY(Mecanicas.y);
+
+                int nuevaX = cabeza.getX();
+                int nuevaY = cabeza.getY();
+                if (nuevaX >= 0 && nuevaX < Laverinto.mapa.length
+                        && nuevaY >= 0 && nuevaY < Laverinto.mapa[0].length
+                        && Laverinto.mapa[nuevaX][nuevaY] != '█'){
+                    Laverinto.mapa[nuevaX][nuevaY] = 'C';
+                }
             }
         }
     }
