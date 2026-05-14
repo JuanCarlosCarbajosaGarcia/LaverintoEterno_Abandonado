@@ -143,6 +143,9 @@ public class Laverinto implements ILaberinto, IJuego{
             complejo();
             mapaF();
 
+            esPosible();
+            complejo();
+
             if (esPosible() && contarPasos() >= minpasos) {
                 posible = true;
             }
