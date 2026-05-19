@@ -24,8 +24,9 @@ public class Laverinto implements ILaberinto, IJuego{
     public static boolean juego = true;
     public static int activo = 0;
     private static boolean primerJuego = true;
-    private static final int minpasos = 1;
-    private static final int maxpasos = 9999;
+    //private static final int minpasos = 1;
+    //private static final int maxpasos = 9999;
+    private static int intentos=0;
 
     public Laverinto(){
         //iniciar enemigos
@@ -134,28 +135,14 @@ public class Laverinto implements ILaberinto, IJuego{
 
     //generar el mapa
     public void generarMapa(){
-        boolean posible = false;
-        int intentos = 0;
-
-        while (!posible && intentos < Max_intentos) {
-
-            mapaB();
-            complejo();
-            mapaF();
-
-            esPosible();
-            complejo();
-
-            if (esPosible() && contarPasos() >= minpasos) {
-                posible = true;
-            }
+        mapaB();
+        complejo();
+        if (!esPosible() && intentos<Max_intentos){
             intentos++;
-        }
-
-        if (!esPosible() && intentos < Max_intentos) {
-            System.out.println("error al generar nivel");
             generarMapa();
+            return;
         }
+        mapaF();
     }
 
 
@@ -163,65 +150,50 @@ public class Laverinto implements ILaberinto, IJuego{
         for (int i = 0; i < Tamanox; i++) {
             Arrays.fill(mapa[i], '█');
         }
-        caminoP();
 
-        camino(1,1);
-
-        //poner los bordes
-        for (int i = 0; i < Tamanox; i++){
-            mapa[i][Tamanoy-1] = '█';
-        }
-        for (int j = 0; j < Tamanoy; j++){
-            mapa[Tamanox-1][j] = '█';
-        }
-        mapa[0][1] = 'E'; //entrada
-        mapa[Tamanox - 1][1]= 'S'; //salida
+        camino(Tamanox-2,1);
     }
 
     //generar el camino principal
-    private void caminoP(){
-        int x=0, y=1;
-        mapa[x][y]='E';
-
-        while (x < Tamanox - 2){
-            mapa[x][y] = ' ';
-            x += rand.nextInt(2)+1;
-            if (x < Tamanox - 1){
-                mapa[x][y] = ' ';
-            }
-        }
-        mapa[Tamanox-1][1] ='S';
-        mapa[Tamanox-2][1] =' ';
-    }
-
-    //generar el camino
     private void camino(int x, int y){
         mapa[x][y]=' ';
-        int[] direccion = {0,1,2,3};
-        shuffleArray(direccion);
+        int[] dx = {-2,0,2,0};
+        int[] dy = {0,2,0,-2};
+        Integer[] direccion = {0,1,2,3};
+        Ramdomizador(direccion);
 
         for(int dir: direccion){
-            int nx = x,  ny = y;
-            switch (dir){
-                case 0: nx -= 2;
-                    break; // Arriba
+            int nx = x + dx[dir];
+            int ny = y + dy[dir];
 
-                case 1: ny += 2;
-                    break; // Derecha
-
-                case 2: nx += 2;
-                    break; // Abajo
-
-                case 3: ny -= 2;
-                    break; // Izquierda
-            }
             //verificar que los limites sean pared
-            if (nx >0 && nx < Tamanox && ny > 0 && ny < Tamanoy && mapa[nx][ny]=='█'){
+            if (nx >0 && nx < Tamanox - 1 && ny > 0 && ny < Tamanoy - 1 && mapa[nx][ny]=='█'){
                 mapa[nx][ny] = ' '; //quitar pared
                 mapa[x + (nx-x)/2][y + (ny-y)/2]=' ';
-                camino(nx,ny);
+                camino(nx,ny);//recursion
             }
         }
+        /*
+        if (!caminoP) {
+            int Cx = 0, Cy = 1;
+            mapa[Cx][Cy] = 'E';
+
+            while (Cx < Tamanox - 2) {
+                mapa[Cx][Cy] = ' ';
+                Cx += rand.nextInt(2) + 1;
+                if (Cx < Tamanox - 1) {
+                    mapa[Cx][Cy] = ' ';
+                }
+            }
+            mapa[Tamanox - 1][1] = 'S';
+            mapa[Tamanox - 2][1] = ' ';
+            contarPasos();
+            esPosible();
+            if (esPosible()){
+                caminoP=true;
+            }
+        }
+        */
     }
 
     //camino recto para testeo
@@ -232,15 +204,16 @@ public class Laverinto implements ILaberinto, IJuego{
         mapa[Tamanox-1][1] ='S';
     }
 
+    /*
     private void caminoR(int x, int y, Set<String> Visi){
         if (Visi.size() > 10) {
             return;
         }
         Visi.add(x+","+y);
-        int[] direcion = {0,1,2,3};
+        Integer[] direcion = {0,1,2,3};
         int contador=0;
         while (contador<=2) {
-            shuffleArray(direcion);
+            Ramdomizador(direcion);
             for (int dir : direcion) {
                 int nx = x, ny = y;
                 switch (dir) {
@@ -267,10 +240,22 @@ public class Laverinto implements ILaberinto, IJuego{
             contador++;
         }
     }
+     */
 
     //generar mas posibilidades
 
     private void complejo(){
+        Random rand = new Random();
+
+        for (int i = 0; i < (Tamanox*Tamanoy)/10; i++) {
+            int rx = rand.nextInt(Tamanox-2) + 1;
+            int ry = rand.nextInt(Tamanoy-2) + 1;
+
+            if (mapa[rx][ry]=='█' && adjacente(rx,ry)){
+                mapa[rx][ry] = ' ';
+            }
+        }
+        /*
         Set<String> celVisi = new HashSet<>();
         for (int i = 1; i < Tamanox-2; i++) {
             if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
@@ -279,9 +264,25 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
         }
+        */
     }
 
-    private void shuffleArray(int[] array) {
+    private boolean adjacente(int x, int y){
+        int[] dx = {-1,0,1,0};
+        int[] dy = {0,1,0,-1};
+
+        for (int d=0; d<4; d++) {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+
+            if (nx > 0 && nx < Tamanox-1 && ny > 0 && ny < Tamanoy-1 && mapa[nx][ny] ==' '){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void Ramdomizador(Integer[] array) {
         for (int i = array.length - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
             int temp = array[i];
@@ -303,7 +304,8 @@ public class Laverinto implements ILaberinto, IJuego{
         mapa[Tamanox-1][1] = 'S';
     }
 
-    private int contarPasos(){
+    /*
+    private void contarPasos(){
         boolean[][] visi = new boolean[Tamanox][Tamanoy];
         Queue<int[]> cola = new LinkedList<>();
         cola.add(new int[]{0,1});
@@ -337,13 +339,14 @@ public class Laverinto implements ILaberinto, IJuego{
                 }
             }
         }
+        cola.clear();
 
         int accesoTotal = (Tamanox*Tamanoy)/5;
-        if (acceso< accesoTotal){
-            return 0;
+        if (acceso < accesoTotal){
+            generarMapa();
         }
-        return 1;
     }
+     */
 
     @Override
     public boolean esPosible(){
@@ -359,7 +362,7 @@ public class Laverinto implements ILaberinto, IJuego{
             int[] actual = cola.poll();
             int x = actual[0], y = actual[1];
 
-            if (x==Tamanox-1 && y==Tamanoy-1){
+            if (x==Tamanox-1 && y==1){
                 return true;
             }
 
