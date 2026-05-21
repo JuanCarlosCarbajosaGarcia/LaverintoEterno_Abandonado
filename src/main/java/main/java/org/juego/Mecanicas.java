@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -321,7 +323,7 @@ public class Mecanicas {
             Cabezas.totalcabezas = Laverinto.rand.nextInt(4)+1;
         } else {
             Cabezas.totalcabezas++;
-            Cabezas.totalcabezas = Cabezas.totalcabezas+Cabezas.cabezascortadas;
+            Cabezas.totalcabezas = Cabezas.totalcabezas+ Cabezas.cabezascortadas;
         }
     }
     public static void terminarNivel(){

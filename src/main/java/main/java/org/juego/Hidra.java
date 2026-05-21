@@ -1,4 +1,6 @@
-public class Hidra extends Entidad{
+package main.java.org.juego;
+
+public class Hidra extends Entidad {
     private int x,y;
 
     public Hidra(String nombre, String tipo, int vida, int dano, int starX, int starY) {

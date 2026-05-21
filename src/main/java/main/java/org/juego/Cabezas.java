@@ -1,7 +1,9 @@
+package main.java.org.juego;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cabezas extends Entidad{
+public class Cabezas extends Entidad {
     private int x;
     private int y;
     public static int totalcabezas;

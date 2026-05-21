@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +14,7 @@ public class Laverinto implements ILaberinto, IJuego{
     public static final Random rand = new Random(System.currentTimeMillis());
     private final Random enemigos = new Random();
     public static final Scanner laverintosc = new Scanner(System.in);
-    static boolean nivelActivo = true;
+    public static boolean nivelActivo = true;
 
     public static final IInterfaz interfaz = new InterfazConsola();
 

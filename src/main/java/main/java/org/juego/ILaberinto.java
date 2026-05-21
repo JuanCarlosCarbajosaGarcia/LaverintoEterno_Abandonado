@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 public interface ILaberinto {
     void generarMapa();
     boolean esPosible();

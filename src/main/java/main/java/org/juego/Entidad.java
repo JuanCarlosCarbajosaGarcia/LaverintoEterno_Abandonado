@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 public class Entidad implements IEntidad {
 
     protected String nombre;

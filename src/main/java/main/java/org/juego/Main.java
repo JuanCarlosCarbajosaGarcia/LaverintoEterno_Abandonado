@@ -1,3 +1,5 @@
+import main.java.org.juego.Laverinto;
+
 static Scanner mainsc = new Scanner(System.in);
 static boolean juegoA = true;
 

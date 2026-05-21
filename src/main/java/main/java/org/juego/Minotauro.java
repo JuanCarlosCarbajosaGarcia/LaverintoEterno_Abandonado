@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 public class Minotauro extends Entidad{
     private int x,y;
 

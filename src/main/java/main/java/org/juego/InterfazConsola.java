@@ -1,6 +1,8 @@
+package main.java.org.juego;
+
 import java.util.Scanner;
 
-public class InterfazConsola implements IInterfaz{
+public class InterfazConsola implements IInterfaz {
 
     //colores
     public static final String RESET = "\u001B[0m";

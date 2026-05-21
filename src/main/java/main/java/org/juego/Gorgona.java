@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 public class Gorgona extends Entidad{
     private int x,y;
 

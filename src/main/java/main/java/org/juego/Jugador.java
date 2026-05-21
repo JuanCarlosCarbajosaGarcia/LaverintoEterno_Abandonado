@@ -1,3 +1,5 @@
+package main.java.org.juego;
+
 import java.util.Scanner;
 
 public class Jugador extends Entidad{
