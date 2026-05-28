@@ -14,11 +14,11 @@ void main(String[] args) {
 static void mostrarInterfaz() {
     System.out.println(InterfazConsola.CIAN + InterfazConsola.NEGRITA);
     System.out.println("╔═══════════════════════════════════╗");
-    System.out.println("║   E L   L A B E R I N T O       ║");
-    System.out.println("║         E T E R N O            ║");
+    System.out.println("║   E L   L A B E R I N T O         ║");
+    System.out.println("║         E T E R N O               ║");
     System.out.println("╠═══════════════════════════════════╣");
-    System.out.println("║  1. MODO CONSOLA                ║");
-    System.out.println("║  2. MODO GRAFICO (JavaFX)      ║");
+    System.out.println("║  1. MODO CONSOLA                  ║");
+    System.out.println("║  2. MODO GRAFICO (JavaFX)         ║");
     System.out.println("╚═══════════════════════════════════╝");
     System.out.println(InterfazConsola.RESET);
 
@@ -27,13 +27,13 @@ static void mostrarInterfaz() {
     try {
         int opcion = mainsc.nextInt();
         switch (opcion) {
-            case 1://modo consola
+            case 1:
                 Laverinto.interfaz.mostrarBienvenida();
                 mostrarMenu();
-                break;
-            case 2://modo grafico
+                break;//modo consola
+            case 2:
                 PantallaGUI.iniciarJavaFX();
-                break;
+                break;//modo grafico
             default:
                 System.out.println("opcion invalida");
                 mostrarInterfaz();
