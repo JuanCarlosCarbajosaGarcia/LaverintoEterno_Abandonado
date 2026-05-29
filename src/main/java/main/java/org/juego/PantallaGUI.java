@@ -8,14 +8,20 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class PantallaGUI extends Application {
+
+    private boolean mover = false;
 
     private static final int CELDA = 25;
 
@@ -24,7 +30,7 @@ public class PantallaGUI extends Application {
     private Label etiqueta;
 
     //referenciar laverinto
-    private static Laverinto juego;
+    private Laverinto juego;
 
     @Override
     public void start(Stage etapas) {
@@ -92,7 +98,7 @@ public class PantallaGUI extends Application {
 
     private void inibuclejuego() {
         Thread bucle = new Thread(() -> {
-            while (Laverinto.juego){
+            while (juego!=null && juego.estaActivo()){
                 try {
                     Thread.sleep(100);
                     Platform.runLater(this::actualizarPantalla);
@@ -255,7 +261,6 @@ public class PantallaGUI extends Application {
 
         //movimiento
         int dx=0, dy=0;
-        boolean mover = false;
 
         switch (codigo){
             case UP:
@@ -308,6 +313,7 @@ public class PantallaGUI extends Application {
         // Verificar paredes
         char tile = Laverinto.mapa[nuevoX][nuevoY];
         if (tile == '█') {
+            Mecanicas.movimiento();
             return;
         }
 
@@ -315,14 +321,15 @@ public class PantallaGUI extends Application {
         Laverinto.jugador.setX(nuevoX);
         Laverinto.jugador.setY(nuevoY);
 
-        Mecanicas.movimiento();
-        Mecanicas.ataque();
-
         if (tile =='S') {
-            Mecanicas.terminarNivel();
+            Mecanicas.terminarNivel();//fin nivel
         } else if (tile =='T') {
-            Mecanicas.Tesoros();
+            Mecanicas.Tesoros();//cofres
         }
+
+        Mecanicas.movimiento();
+
+        mover=false;
     }
 
     private void mostrarConfirmacionSalida() {
@@ -338,19 +345,33 @@ public class PantallaGUI extends Application {
     }
 
     private void abrirMenuDesarrollo() {
-        boolean menuActivo = true;
+        Stage menu = new Stage();
+        AtomicBoolean menuActivo = new AtomicBoolean(true);
 
-        while (menuActivo && Laverinto.juego) {
-            // Mostrar menú简单的
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Menú Desarrollo");
-            alerta.setHeaderText("Elige una opción:");
-            alerta.setContentText("1. Tienda\n2. Camino fácil\n3. Volver al juego");
+        while (menuActivo.get() && Laverinto.juego) {
+            // Mostrar menú
+            Button tienda = new Button("Tienda");
+            tienda.setOnAction(event1 -> {Vendedor vendedor = new Vendedor(0);});
 
-            alerta.showAndWait();
+            Button camino = new Button("Camino facil");
+            camino.setOnAction(event2 -> Laverinto.caminoE());
 
-            // Como no podemos usar Scanner en JavaFX, simplificamos
-            menuActivo = false;
+            Button salir = new Button("Salir");
+            salir.setOnAction(event3 -> menuActivo.set(false));
+
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+            gridPane.setPadding(new Insets(10, 10, 10, 10));
+            gridPane.setAlignment(Pos.CENTER);
+            gridPane.add(tienda, 0, 0);
+            gridPane.add(camino, 0, 1);
+            gridPane.add(salir, 0, 2);
+            Scene scene = new Scene(gridPane, 300, 300);
+
+            menu.setTitle("Menu pruebas");
+            menu.setScene(scene);
+            menu.show();
         }
     }
 
