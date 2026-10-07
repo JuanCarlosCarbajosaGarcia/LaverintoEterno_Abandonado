@@ -26,8 +26,6 @@ public class Laverinto implements ILaberinto, IJuego{
     public static boolean juego = true;
     public static int activo = 0;
     private static boolean primerJuego = true;
-    //private static final int minpasos = 1;
-    //private static final int maxpasos = 9999;
     private static int intentos=0;
 
     public Laverinto(){
@@ -175,27 +173,6 @@ public class Laverinto implements ILaberinto, IJuego{
                 camino(nx,ny);//recursion
             }
         }
-        /*
-        if (!caminoP) {
-            int Cx = 0, Cy = 1;
-            mapa[Cx][Cy] = 'E';
-
-            while (Cx < Tamanox - 2) {
-                mapa[Cx][Cy] = ' ';
-                Cx += rand.nextInt(2) + 1;
-                if (Cx < Tamanox - 1) {
-                    mapa[Cx][Cy] = ' ';
-                }
-            }
-            mapa[Tamanox - 1][1] = 'S';
-            mapa[Tamanox - 2][1] = ' ';
-            contarPasos();
-            esPosible();
-            if (esPosible()){
-                caminoP=true;
-            }
-        }
-        */
     }
 
     //camino recto para testeo
@@ -205,44 +182,6 @@ public class Laverinto implements ILaberinto, IJuego{
         }
         mapa[Tamanox-1][1] ='S';
     }
-
-    /*
-    private void caminoR(int x, int y, Set<String> Visi){
-        if (Visi.size() > 10) {
-            return;
-        }
-        Visi.add(x+","+y);
-        Integer[] direcion = {0,1,2,3};
-        int contador=0;
-        while (contador<=2) {
-            Ramdomizador(direcion);
-            for (int dir : direcion) {
-                int nx = x, ny = y;
-                switch (dir) {
-                    case 0:
-                        nx -= 2;
-                        break;
-                    case 1:
-                        ny += 2;
-                        break;
-                    case 2:
-                        nx += 2;
-                        break;
-                    case 3:
-                        ny -= 2;
-                        break;
-                }
-                if (nx > 1 && nx < Tamanox - 1 && ny > 1 && ny < Tamanoy - 1 && mapa[nx][ny] == '█') {
-                    mapa[nx][ny] = ' ';
-                    mapa[(x + nx) / 2][(y + ny) / 2] = ' ';
-                    caminoR(nx, ny, Visi);
-                    break;
-                }
-            }
-            contador++;
-        }
-    }
-     */
 
     //generar mas posibilidades
 
@@ -257,16 +196,6 @@ public class Laverinto implements ILaberinto, IJuego{
                 mapa[rx][ry] = ' ';
             }
         }
-        /*
-        Set<String> celVisi = new HashSet<>();
-        for (int i = 1; i < Tamanox-2; i++) {
-            if (mapa[i][1] == ' ' && !celVisi.contains(i + ",1")) {
-                if (rand.nextDouble() < 0.4){
-                    caminoR(i,1,celVisi);
-                }
-            }
-        }
-        */
     }
 
     private boolean adjacente(int x, int y){
@@ -305,50 +234,6 @@ public class Laverinto implements ILaberinto, IJuego{
         mapa[0][1] = 'E';
         mapa[Tamanox-1][1] = 'S';
     }
-
-    /*
-    private void contarPasos(){
-        boolean[][] visi = new boolean[Tamanox][Tamanoy];
-        Queue<int[]> cola = new LinkedList<>();
-        cola.add(new int[]{0,1});
-        visi[0][1] = true;
-
-        int pasos = 0;
-        int acceso = 1;
-        int[] dx = {-1,0,1,0}, dy = {0,1,0,-1};
-
-        while (!cola.isEmpty() && pasos < maxpasos) {
-            int size = cola.size();
-            pasos ++;
-
-            for (int i = 0; i < size; i++) {
-                int[] actual = cola.poll();
-                if(actual==null) continue;
-
-                int x = actual[0], y = actual[1];
-
-                for (int d = 0; d < 4; d++){
-                    int nx = x + dx[d];
-                    int ny = y + dy[d];
-
-                    if (nx >=0 && nx<Tamanox && ny >= 0 && ny< Tamanoy
-                            && !visi[nx][ny] && esCamino(nx,ny)) {
-
-                        visi[nx][ny] = true;
-                        cola.add(new int[]{nx,ny});
-                        acceso++;
-                    }
-                }
-            }
-        }
-        cola.clear();
-
-        int accesoTotal = (Tamanox*Tamanoy)/5;
-        if (acceso < accesoTotal){
-            generarMapa();
-        }
-    }
-     */
 
     @Override
     public boolean esPosible(){
