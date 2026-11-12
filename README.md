@@ -1,1 +1,2 @@
-proyecto de fin de grado siendo este un videojuego
+proyecto de videojuego
+abandonado
